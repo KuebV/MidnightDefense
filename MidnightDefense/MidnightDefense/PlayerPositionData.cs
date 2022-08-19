@@ -26,7 +26,7 @@ namespace MidnightDefense
 
         public Vector3 LastPosition { get; set; }
 
-        public Vector3 Velocity { get; }
+        public Vector3 Velocity { get; set; }
 
         public ReferenceHub ReferenceHub { get; }
 

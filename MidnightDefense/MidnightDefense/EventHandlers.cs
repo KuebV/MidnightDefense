@@ -14,15 +14,53 @@ namespace MidnightDefense
     public class EventHandlers
     {
 
+
+        
+
+        /// <summary>
+        /// Anti Human-Teamkilling when FF is OFF
+        /// </summary>
+        /// <param name="ev"></param>
+
+        public static void BeforePlayerDeath(DyingEventArgs ev)
+        {
+            if (ev.Killer == null) return;
+            if (ev.Target == null) return;
+            if (ev.Target.IsScp) return;
+
+            if (Plugin.Instance.Config.FFDetection)
+            {
+                if (!Server.FriendlyFire)
+                {
+                    Team attackerTeam = ev.Killer.Role.Team;
+                    Team targetTeam = ev.Target.Role.Team;
+
+                    string ffMessage = Plugin.Instance.Translation.FFDetectedMessage;
+                    if (attackerTeam == targetTeam)
+                    {
+                        PlayerLog playerLog = new PlayerLog(ev.Killer);
+                        playerLog.Log(LogType.Detected, ffMessage);
+
+                        if (Plugin.Instance.Config.NegateFFDamage)
+                            ev.IsAllowed = false;
+
+                        Plugin.SuspectedPlayers[ev.Killer]++;
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Prevents SCP Friendly-Fire & SCP Teamkilling
+        /// </summary>
+        /// <param name="ev"></param>
         public static void OnPlayerHurt(HurtingEventArgs ev)
         {
 
-            if (ev.Attacker == null)
-                return;
-
-            if (ev.Target == null)
-                return;
-
+            if (ev.Attacker == null) return;
+            if (ev.Target == null) return;
+            if (ev.Attacker.IsHuman) return;
+            if (ev.Target.IsHuman) return;
 
             if (Plugin.Instance.Config.FFDetection)
             {
