@@ -190,6 +190,18 @@ namespace MidnightDefense
             
         }
 
+        public static void OnLeave(LeftEventArgs ev)
+        {
+            if (Plugin.MonitoringAimbot.ContainsKey(ev.Player))
+            {
+                AntiAimbotPlayer aimbotPlayer = Plugin.MonitoringAimbot[ev.Player];
+                aimbotPlayer.Destroy();
+
+                Plugin.MonitoringAimbot.Remove(ev.Player);
+            }
+                
+        }
+
         public static void AlertOnlineStaff(Player suspectedPlayer)
         {
             for (int i = 0; i < Player.List.Count(); i++)

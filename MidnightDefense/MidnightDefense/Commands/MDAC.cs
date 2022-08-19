@@ -167,27 +167,6 @@ namespace MidnightDefense.Commands
                         return true;
                     }
                 #endregion
-                #region ANTI-CHEAT DEBUG
-                case "debug":
-                    if (!sender.CheckPermission("md.admin"))
-                    {
-                        response = "Invalid Permissions!";
-                        return false;
-                    }
-
-                    Player debugPlayer = Player.Get(arguments.At(1));
-                    Plugin.SuspectedPlayers[debugPlayer]++;
-
-                    PlayerLog log = new PlayerLog(debugPlayer);
-                    log.Log(LogType.Detected, Plugin.Instance.Translation.FFDetectedMessage);
-                    log.Log(LogType.Detected, Plugin.Instance.Translation.SCP049DetectedMessage);
-                    log.Log(LogType.Detected, Plugin.Instance.Translation.InfiniteRangeDetectionMessage);
-                    log.Log(LogType.Detected, Plugin.Instance.Translation.SpeedhackDetectionMessage);
-                    log.Log(LogType.Detected, Plugin.Instance.Translation.SilentAimbotDetectionMessage);
-
-                    response = "Added Points to Suspected Player";
-                    return true;
-                #endregion
                 #region ANTI-CHEAT DISMISSAL
                 case "dismiss":
                     Player dismissPlayer = Player.Get(arguments.At(1));

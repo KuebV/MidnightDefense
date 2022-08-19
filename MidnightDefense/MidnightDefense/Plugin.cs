@@ -32,6 +32,7 @@ namespace MidnightDefense
             Exiled.Events.Handlers.Scp049.StartingRecall += EventHandlers.OnRecall;
             Exiled.Events.Handlers.Scp049.FinishingRecall += EventHandlers.OnRevive;
             Exiled.Events.Handlers.Player.Joined += EventHandlers.OnJoin;
+            Exiled.Events.Handlers.Player.Left += EventHandlers.OnLeave;
 
             Timing.RunCoroutine(API.MonitorAimbotEnumerator());
             Timing.RunCoroutine(EventHandlers.CheckSuspectedPlayerPoints());
@@ -46,6 +47,8 @@ namespace MidnightDefense
             Exiled.Events.Handlers.Scp049.StartingRecall -= EventHandlers.OnRecall;
             Exiled.Events.Handlers.Scp049.FinishingRecall -= EventHandlers.OnRevive;
             Exiled.Events.Handlers.Player.Joined -= EventHandlers.OnJoin;
+            Exiled.Events.Handlers.Player.Left -= EventHandlers.OnLeave;
+
             base.OnDisabled();
         }
     }
