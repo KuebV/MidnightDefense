@@ -16,8 +16,9 @@ Midnight Defense has protection against the following cheats with more planned i
   - Cheaters playing as an SCP are able to kill others while being outside the normal range to attack others
 - Speedhack **[ Completed ]**
   - Cheaters are able to speed their game up to have such advantages such as increases movement speed, and faster firing rates
-- Silent Aimbot **[ Completed ]**
+- Silent Aimbot **[ Completed ]** **[Must be manually enabled on a player]**
   - Cheaters are able to have all the functionality of aimbot despite it looking on other players screens that they are missing all their shots
+  - Due to not much being known about this, to cut down on potential errors you have to use a command in order to have this feature on the player
   
 ## Configuration:
 ```yml
