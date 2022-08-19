@@ -11,7 +11,7 @@ namespace MidnightDefense
 {
     public class AntiAimbotPlayer
     {
-        public AntiAimbotPlayer(RoleType type, string name, Vector3 scale, Player suspectedPlayer)
+        public AntiAimbotPlayer(RoleType type, Vector3 scale, Player suspectedPlayer)
         {
             GameObject = UnityEngine.Object.Instantiate(NetworkManager.singleton.playerPrefab);
 
@@ -24,7 +24,7 @@ namespace MidnightDefense
                 ReferenceHub.characterClassManager.GodMode = true;
 
             ReferenceHub.playerStats.StatModules[0].CurValue = 100;
-            ReferenceHub.nicknameSync.Network_myNickSync = name;
+            ReferenceHub.nicknameSync.Network_myNickSync = Plugin.Instance.Translation.SilentAimbotNPCName;
             ReferenceHub.characterClassManager.IsVerified = true;
 
             GameObject.transform.localScale = scale;

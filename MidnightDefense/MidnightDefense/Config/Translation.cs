@@ -28,5 +28,8 @@ namespace MidnightDefense
         [Description("Alert Message")]
         public string PointThresholdMessage { get; set; } = "<color=#f0311f>%player% has been detected for cheating!</color>";
 
+        [Description("Anti-Aimbot NPC Name")]
+        public string SilentAimbotNPCName { get; set; } = "MD-AC";
+
     }
 }

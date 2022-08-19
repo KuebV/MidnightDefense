@@ -158,7 +158,7 @@ namespace MidnightDefense.Commands
                         response = "MD-AC will now monitor that player for Aimbot";
 
                         float[] arr = Plugin.Instance.Config.SilentAimbotPlayerSize;
-                        AntiAimbotPlayer antiAimbotPlayer = new AntiAimbotPlayer(RoleType.ClassD, "MD-AC", new Vector3(arr[0], arr[1], arr[2]));
+                        AntiAimbotPlayer antiAimbotPlayer = new AntiAimbotPlayer(RoleType.ClassD, new Vector3(arr[0], arr[1], arr[2]), triggerPlayer);
                         antiAimbotPlayer.Spawn();
 
                         antiAimbotPlayer.Player.TargetGhostsHashSet.Remove(triggerPlayer.Id);
