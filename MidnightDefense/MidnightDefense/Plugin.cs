@@ -21,12 +21,12 @@ namespace MidnightDefense
         public static Dictionary<Player, AntiAimbotPlayer> MonitoringAimbot = new Dictionary<Player, AntiAimbotPlayer>();
         public static Dictionary<Player, long> CheckingSpeedhack = new Dictionary<Player, long>();
         public static Dictionary<Player, int> SilentAimbotHitCounter = new Dictionary<Player, int>();
+        public static List<PlayerPositionData> PlayerPositions = new List<PlayerPositionData>();
 
         public static Plugin Instance;
 
         public override void OnEnabled()
         {
-            Instance = this;
             Exiled.Events.Handlers.Player.Hurting += EventHandlers.OnPlayerHurt;
             Exiled.Events.Handlers.Player.Shooting += EventHandlers.OnShooting;
             Exiled.Events.Handlers.Scp049.StartingRecall += EventHandlers.OnRecall;
@@ -34,6 +34,7 @@ namespace MidnightDefense
             Exiled.Events.Handlers.Player.Joined += EventHandlers.OnJoin;
             Exiled.Events.Handlers.Player.Left += EventHandlers.OnLeave;
 
+            Instance = this;
             Timing.RunCoroutine(API.MonitorAimbotEnumerator());
             Timing.RunCoroutine(EventHandlers.CheckSuspectedPlayerPoints());
             base.OnEnabled();

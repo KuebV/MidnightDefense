@@ -178,6 +178,11 @@ namespace MidnightDefense
         #endregion
 
 
+        /*public static void OnReport(ReportingCheaterEventArgs ev)
+        {
+            ev.
+        }*/
+
         public static void OnJoin(JoinedEventArgs ev)
         {
 
@@ -188,6 +193,10 @@ namespace MidnightDefense
 
                 PlayerLog playerLog = new PlayerLog(ev.Player);
                 playerLog.Log(LogType.Informational, "<color=#6ff263>--START OF LOG--</color>");
+
+                if (!Plugin.PlayerPositions.Any(x => x.player == ev.Player))
+                    Plugin.PlayerPositions.Add(new PlayerPositionData(ev.Player));
+
             });
             
         }
@@ -200,6 +209,16 @@ namespace MidnightDefense
                 aimbotPlayer.Destroy();
 
                 Plugin.MonitoringAimbot.Remove(ev.Player);
+            }
+
+            for (int i = 0; i < Plugin.PlayerPositions.Count; i++)
+            {
+                PlayerPositionData posData = Plugin.PlayerPositions[i];
+                if (posData.player == ev.Player)
+                {
+                    Plugin.PlayerPositions.Remove(posData);
+                    break;
+                }
             }
                 
         }
@@ -216,7 +235,7 @@ namespace MidnightDefense
                         sb += "\n";
 
                     sb += Plugin.Instance.Translation.PointThresholdMessage.Replace("%player%", suspectedPlayer.Nickname);
-                    player.ShowHint(sb, 10);
+                    player.ShowHint(sb, 30);
                 }
 
             }
@@ -237,7 +256,7 @@ namespace MidnightDefense
                     }
                 }
 
-                yield return Timing.WaitForSeconds(1f);
+                yield return Timing.WaitForSeconds(10f);
             }
         }
     }

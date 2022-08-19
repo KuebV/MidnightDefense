@@ -59,6 +59,12 @@ namespace MidnightDefense
         [Description("How often should the Anti-Aimbot NPC teleport?")]
         public float SilentAimbotTeleportTime { get; set; } = 0.15f;
 
+        [Description("Should Anti-Aimbot trigger if a player submits a cheater report?")]
+        public bool SilentAimbotTriggerOnReport { get; set; } = true;
+
+        [Description("How many cheater reports does it take for the Anti-Aimbot to trigger on the suspected player")]
+        public int SilentAimbotTriggerReportAmount { get; set; } = 3;
+
         [Description("Speedhack Detection")]
         public bool SpeedhackDetection { get; set; } = true;
 
@@ -71,10 +77,21 @@ namespace MidnightDefense
         [Description("If Speedhack is detected, should the current action be cancelled?")]
         public bool SpeedhackDetectionCancelEvent { get; set; } = false;
 
+        [Description("Noclip Detection")]
+        public bool NoclipDetection { get; set; } = true;
+
+        [Description("Points given when suspected player attempts to NoClip")]
+        public int NoclipDetectionPoints { get; set; } = 1;
+
+        [Description("Rubberband to last recorded position when suspected player attempts to noclip")]
+        public bool NoclipRubberband { get; set; } = true;
+
         [Description("Alert Threshold (Points until any online staff are notified)")]
         public int PointThreshold { get; set; } = 5;
 
         [Description("When a player reaches a certain amount of points, should staff be alerted?")]
         public bool AlertOnlineStaff { get; set; } = true;
+
+        
     }
 }

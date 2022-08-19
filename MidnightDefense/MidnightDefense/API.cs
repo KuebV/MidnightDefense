@@ -37,6 +37,8 @@ namespace MidnightDefense
                             midPoint.z += random.Next(-2, 4);
 
                             keyPair.Value.Player.Position = midPoint;
+
+                            Log.Info("Tag: " + hit.transform.gameObject.transform + "\nPosition: " + hit.point.ToString());
                         }
 
                     }
@@ -44,6 +46,14 @@ namespace MidnightDefense
 
                 yield return Timing.WaitForSeconds(Plugin.Instance.Config.SilentAimbotTeleportTime);
                     
+            }
+        }
+
+        public static IEnumerator<float> MonitorPlayerSpeed()
+        {
+            for (; ;)
+            {
+                
             }
         }
     }

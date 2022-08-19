@@ -97,6 +97,7 @@
     <Compile Include="Config\Config.cs" />
     <Compile Include="EventHandlers.cs" />
     <Compile Include="PlayerLog.cs" />
+    <Compile Include="PlayerPositionData.cs" />
     <Compile Include="Plugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Config\Translation.cs" />
