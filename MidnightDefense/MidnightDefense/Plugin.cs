@@ -14,7 +14,7 @@ namespace MidnightDefense
 
         public override string Author => "KuebV";
         public override string Name => "MidnightDefense";
-        public override Version Version => new Version(1, 1, 0);
+        public override Version Version => new Version(1, 1, 1);
 
         public static Dictionary<Player, string> PlayerLogs = new Dictionary<Player, string>();
         public static Dictionary<Player, int> SuspectedPlayers = new Dictionary<Player, int>();

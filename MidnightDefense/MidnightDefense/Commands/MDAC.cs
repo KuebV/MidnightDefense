@@ -179,7 +179,11 @@ namespace MidnightDefense.Commands
                     Plugin.SuspectedPlayers[debugPlayer]++;
 
                     PlayerLog log = new PlayerLog(debugPlayer);
-                    log.Log(LogType.Alert, "Points have been added to this player by administrator!");
+                    log.Log(LogType.Detected, Plugin.Instance.Translation.FFDetectedMessage);
+                    log.Log(LogType.Detected, Plugin.Instance.Translation.SCP049DetectedMessage);
+                    log.Log(LogType.Detected, Plugin.Instance.Translation.InfiniteRangeDetectionMessage);
+                    log.Log(LogType.Detected, Plugin.Instance.Translation.SpeedhackDetectionMessage);
+                    log.Log(LogType.Detected, Plugin.Instance.Translation.SilentAimbotDetectionMessage);
 
                     response = "Added Points to Suspected Player";
                     return true;

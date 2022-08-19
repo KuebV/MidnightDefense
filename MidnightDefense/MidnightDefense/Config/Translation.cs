@@ -23,7 +23,7 @@ namespace MidnightDefense
         public string SpeedhackDetectionMessage { get; set; } = "Player has been suspected for using <color=#2ea339>Speedhack</color>";
 
         [Description("Silent Aimbot Detection Message")]
-        public string SilentAimbotDetectionMessage { get; set; } = "Player has been suspected for using <color=#2ea339>Speedhack</color>";
+        public string SilentAimbotDetectionMessage { get; set; } = "Player has been suspected for using <color=#2ea339>Silent Aimbot</color>";
 
         [Description("Alert Message")]
         public string PointThresholdMessage { get; set; } = "<color=#f0311f>%player% has been detected for cheating!</color>";
