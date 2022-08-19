@@ -33,8 +33,8 @@ namespace MidnightDefense
                             Vector3 midPoint = Vector3.Lerp(rayCastHit, player.Position, 0.5f);
 
                             midPoint.y += random.Next(-1, 5);
-                            midPoint.x += random.Next(-1, 3);
-                            midPoint.z += random.Next(-1, 3);
+                            midPoint.x += random.Next(-2, 4);
+                            midPoint.z += random.Next(-2, 4);
 
                             keyPair.Value.Player.Position = midPoint;
                         }
@@ -42,7 +42,7 @@ namespace MidnightDefense
                     }
                 }
 
-                yield return Timing.WaitForSeconds(0.35f);
+                yield return Timing.WaitForSeconds(Plugin.Instance.Config.SilentAimbotTeleportTime);
                     
             }
         }

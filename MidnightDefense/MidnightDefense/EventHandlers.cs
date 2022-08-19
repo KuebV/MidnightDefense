@@ -127,6 +127,8 @@ namespace MidnightDefense
                             Plugin.SilentAimbotHitCounter[ev.Shooter]++;
                         }
                     }
+                    else
+                        Plugin.SilentAimbotHitCounter[ev.Shooter] = 0;
                 }
             }
         }
@@ -230,7 +232,8 @@ namespace MidnightDefense
                     {
                         KeyValuePair<Player, int> suspectedPlayer = Plugin.SuspectedPlayers.ElementAt(i);
                         if (suspectedPlayer.Value >= Plugin.Instance.Config.PointThreshold)
-                            AlertOnlineStaff(suspectedPlayer.Key);
+                            if (Plugin.Instance.Config.AlertOnlineStaff)
+                                AlertOnlineStaff(suspectedPlayer.Key);
                     }
                 }
 

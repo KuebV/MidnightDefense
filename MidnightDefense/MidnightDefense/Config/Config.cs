@@ -56,6 +56,9 @@ namespace MidnightDefense
         [Description("How many hits to the anti-aimbot player it takes until the cheat is detected")]
         public int SilentAimbotHitThreshold { get; set; } = 8;
 
+        [Description("How often should the Anti-Aimbot NPC teleport?")]
+        public float SilentAimbotTeleportTime { get; set; } = 0.15f;
+
         [Description("Speedhack Detection")]
         public bool SpeedhackDetection { get; set; } = true;
 

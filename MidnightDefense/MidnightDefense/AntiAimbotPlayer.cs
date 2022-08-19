@@ -11,7 +11,7 @@ namespace MidnightDefense
 {
     public class AntiAimbotPlayer
     {
-        public AntiAimbotPlayer(RoleType type, string name, Vector3 scale)
+        public AntiAimbotPlayer(RoleType type, string name, Vector3 scale, Player suspectedPlayer)
         {
             GameObject = UnityEngine.Object.Instantiate(NetworkManager.singleton.playerPrefab);
 
@@ -33,6 +33,12 @@ namespace MidnightDefense
             Player = new Player(GameObject);
             Player.SessionVariables.Add("IsNPC", true);
 
+            List<Player> playerList = Player.List.ToList();
+            for(int i = 0; i < playerList.Count; i++)
+            {
+                if (playerList[i] != suspectedPlayer)
+                    Player.TargetGhostsHashSet.Add(playerList[i].Id);
+            }
         }
 
 
@@ -67,4 +73,5 @@ namespace MidnightDefense
         public void Spawn() => NetworkServer.Spawn(GameObject);
 
     }
+
 }
