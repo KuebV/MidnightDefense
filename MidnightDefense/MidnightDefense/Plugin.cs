@@ -15,7 +15,7 @@ namespace MidnightDefense
 
         public override string Author => "KuebV";
         public override string Name => "MidnightDefense";
-        public override Version Version => new Version(1, 2, 0);
+        public override Version Version => new Version(1, 2, 5);
 
         public static Plugin Instance;
 

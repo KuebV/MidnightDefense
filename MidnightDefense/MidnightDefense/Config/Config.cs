@@ -14,9 +14,6 @@ namespace MidnightDefense
         [Description("Whether the plugin is enabled or not")]
         public bool IsEnabled { get; set; } = true;
 
-        [Description("Enable Debug Logs")]
-        public bool Debug { get; set; } = false;
-
         [Description("Should Friendly-Fire Detection be enabled")]
         public bool FFDetection { get; set; } = true;
 

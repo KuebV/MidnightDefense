@@ -161,7 +161,6 @@ namespace MidnightDefense
             Vector3 forward = ev.Shooter.CameraTransform.forward;
             if (Physics.Raycast(ev.Shooter.CameraTransform.position + forward, forward, out RaycastHit hit, 300f))
             {
-                Log.Info(hit.transform.gameObject.tag);
                 if (hit.transform.gameObject.tag == "Player")
                 {
 
@@ -224,9 +223,6 @@ namespace MidnightDefense
             Vector3 previousPosition = scp049recallPosition[ev.Scp049];
             if (previousPosition != ev.Scp049.Position)
             {
-                if (Plugin.Instance.Config.Debug)
-                    Log.Info("Player has been detected for SCP049 Movement Cheats");
-
                 PlayerInfo playerInfo = Plugin.PlayerInfo.Find(p => p.Player == ev.Scp049);
                 playerInfo.DetectionPoints += Plugin.Instance.Config.SCP049DetectedMovementPoints;
                 playerInfo.DetectedCheats.NoDuplicateAdd(CheatsEnum.SCP049Movement);
