@@ -1,5 +1,6 @@
 ﻿using Exiled.API.Features;
 using MEC;
+using MidnightDefense.Objects;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,13 +16,6 @@ namespace MidnightDefense
         public override string Author => "KuebV";
         public override string Name => "MidnightDefense";
         public override Version Version => new Version(1, 1, 1);
-
-        public static Dictionary<Player, string> PlayerLogs = new Dictionary<Player, string>();
-        public static Dictionary<Player, int> SuspectedPlayers = new Dictionary<Player, int>();
-        public static Dictionary<Player, AntiAimbotPlayer> MonitoringAimbot = new Dictionary<Player, AntiAimbotPlayer>();
-        public static Dictionary<Player, long> CheckingSpeedhack = new Dictionary<Player, long>();
-        public static Dictionary<Player, int> SilentAimbotHitCounter = new Dictionary<Player, int>();
-        public static List<PlayerPositionData> PlayerPositions = new List<PlayerPositionData>();
 
         public static Plugin Instance;
 
@@ -54,5 +48,13 @@ namespace MidnightDefense
 
             base.OnDisabled();
         }
+
+        /// <summary>
+        /// Glorified String Builder for MDAC Player Command
+        /// </summary>
+        public static Dictionary<Player, string> PlayerLogs = new Dictionary<Player, string>();
+
+        public static List<PlayerInfo> PlayerInfo = new List<PlayerInfo>();
     }
+
 }

@@ -1,5 +1,6 @@
 ﻿using Exiled.API.Features;
 using MEC;
+using MidnightDefense.Objects;
 using Mirror;
 using RemoteAdmin;
 using System;
@@ -20,27 +21,22 @@ namespace MidnightDefense
             random = new System.Random();
             for (; ; )
             {
-                if (Plugin.MonitoringAimbot.Count() > 0)
+                List<PlayerInfo> players = Plugin.PlayerInfo.FindAll(x => x.MonitorForAimbot == true);
+                for (int i = 0; i < players.Count; i++)
                 {
-                    for (int i = 0; i < Plugin.MonitoringAimbot.Count(); i++)
+                    PlayerInfo player = players[i];
+
+                    Vector3 forward = player.Player.CameraTransform.forward;
+                    if (Physics.Raycast(player.Player.CameraTransform.position, forward, out RaycastHit hit, 300f))
                     {
-                        KeyValuePair<Player, AntiAimbotPlayer> keyPair = Plugin.MonitoringAimbot.ElementAt(i);
-                        Player player = keyPair.Key;
-                        Vector3 forward = player.CameraTransform.forward;
-                        if (Physics.Raycast(player.CameraTransform.position, forward, out RaycastHit hit, 300f))
-                        {
-                            Vector3 rayCastHit = hit.point;
-                            Vector3 midPoint = Vector3.Lerp(rayCastHit, player.Position, 0.5f);
+                        Vector3 rayCastHit = hit.point;
+                        Vector3 midPoint = Vector3.Lerp(rayCastHit, player.Player.Position, 0.5f);
 
-                            midPoint.y += random.Next(-1, 5);
-                            midPoint.x += random.Next(-2, 4);
-                            midPoint.z += random.Next(-2, 4);
+                        midPoint.y += random.Next(-1, 5);
+                        midPoint.x += random.Next(-2, 4);
+                        midPoint.z += random.Next(-2, 4);
 
-                            keyPair.Value.Player.Position = midPoint;
-
-                            Log.Info("Tag: " + hit.transform.gameObject.transform + "\nPosition: " + hit.point.ToString());
-                        }
-
+                        player.AimbotPlayer.Position = midPoint;
                     }
                 }
 
@@ -49,12 +45,14 @@ namespace MidnightDefense
             }
         }
 
-        public static IEnumerator<float> MonitorPlayerSpeed()
+
+        //This will be implemented on the Beta Branch at a later date
+        /*public static IEnumerator<float> MonitorPlayerSpeed()
         {
             for (; ;)
             {
                 
             }
-        }
+        }*/
     }
 }
