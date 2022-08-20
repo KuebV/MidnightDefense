@@ -51,6 +51,14 @@ silent_aimbot_player_size:
 - 1
 - 1
 - 1
+# If anyone shoots the anti-aimbot player, it will automatically kick them (Default : False)
+disconnect_on_anti_aimbot_hit: false
+# How many hits to the anti-aimbot player it takes until the cheat is detected
+silent_aimbot_hit_threshold: 8
+# How often should the Anti-Aimbot NPC teleport?
+silent_aimbot_teleport_time: 0.15
+# How many cheater reports does it take for the Anti-Aimbot to trigger on the suspected player
+silent_aimbot_trigger_report_amount: 3
 # Speedhack Detection
 speedhack_detection: true
 # Points given when suspected player triggers Speedhack
@@ -60,14 +68,24 @@ speedhack_detection_threshold: 75
 # If Speedhack is detected, should the current action be cancelled?
 speedhack_detection_cancel_event: false
 # Alert Threshold (Points until any online staff are notified)
-point_threshold: 5
+point_threshold: 10
 # When a player reaches a certain amount of points, should staff be alerted?
 alert_online_staff: true
+# Maximum times an alert will notify staff / discord about the cheater
+alert_max_times: 3
+# How often does the plugin check if anyone has reached the point threshold to alert staff
+alert_timeframe: 10
+# Enable Discord Webhook Alerts
+discord_webhook_enabled: false
+# Discord Webhook Username
+discord_webhook_username: Midnight Defense Alerts
+# Discord Webhook URL
+discord_webhook_u_r_l: discordURLhere
 ```
 
 ## Translation
 ```yml
-# Friendly-Fire Protection Detection Message
+# Friendly-Fire Detection Message
 f_f_detected_message: Player has been suspected for using <color=#2ea339>Friendly-Fire</color> despite it being disabled
 # SCP-049 Movement Detection Message
 s_c_p049_detected_message: Player has been suspected for using <color=#2ea339>SCP-049 Movement Cheats</color>
@@ -75,8 +93,14 @@ s_c_p049_detected_message: Player has been suspected for using <color=#2ea339>SC
 infinite_range_detection_message: Player has been suspected for using <color=#2ea339>Infinite Range</color>
 # Speedhack Detection Message
 speedhack_detection_message: Player has been suspected for using <color=#2ea339>Speedhack</color>
+# Silent Aimbot Detection Message
+silent_aimbot_detection_message: Player has been suspected for using <color=#2ea339>Silent Aimbot</color>
 # Alert Message
 point_threshold_message: <color=#f0311f>%player% has been detected for cheating!</color>
+# Discord Alert Message
+discord_alert_message: '%player% has been detected for cheating! Detected Cheats [%cheats%]'
+# Anti-Aimbot NPC Name
+silent_aimbot_n_p_c_name: MD-AC
 ```
 
 ## Commands
