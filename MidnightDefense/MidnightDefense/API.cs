@@ -16,27 +16,32 @@ namespace MidnightDefense
     {
 
         private static System.Random random;
+
+        public static Dictionary<Player, AntiAimbotPlayer> MonitoringAimbot = new Dictionary<Player, AntiAimbotPlayer>();
         public static IEnumerator<float> MonitorAimbotEnumerator()
         {
             random = new System.Random();
             for (; ; )
             {
-                List<PlayerInfo> players = Plugin.PlayerInfo.FindAll(x => x.MonitorForAimbot == true);
-                for (int i = 0; i < players.Count; i++)
+                if (MonitoringAimbot.Count() > 0)
                 {
-                    PlayerInfo player = players[i];
-
-                    Vector3 forward = player.Player.CameraTransform.forward;
-                    if (Physics.Raycast(player.Player.CameraTransform.position, forward, out RaycastHit hit, 300f))
+                    for (int i = 0; i < MonitoringAimbot.Count(); i++)
                     {
-                        Vector3 rayCastHit = hit.point;
-                        Vector3 midPoint = Vector3.Lerp(rayCastHit, player.Player.Position, 0.5f);
+                        KeyValuePair<Player, AntiAimbotPlayer> keyPair = MonitoringAimbot.ElementAt(i);
+                        Player player = keyPair.Key;
+                        Vector3 forward = player.CameraTransform.forward;
+                        if (Physics.Raycast(player.CameraTransform.position, forward, out RaycastHit hit, 300f))
+                        {
+                            Vector3 rayCastHit = hit.point;
+                            Vector3 midPoint = Vector3.Lerp(rayCastHit, player.Position, 0.5f);
 
-                        midPoint.y += random.Next(-1, 5);
-                        midPoint.x += random.Next(-2, 4);
-                        midPoint.z += random.Next(-2, 4);
+                            midPoint.y += random.Next(-1, 5);
+                            midPoint.x += random.Next(-2, 4);
+                            midPoint.z += random.Next(-2, 4);
 
-                        player.AimbotPlayer.Position = midPoint;
+                            keyPair.Value.Player.Position = midPoint;
+                        }
+
                     }
                 }
 

@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Exiled.API.Enums;
-using Exiled.API.Features;
+﻿using Exiled.API.Features;
 using Exiled.Events.EventArgs;
 using MEC;
 using MidnightDefense.Objects;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace MidnightDefense
@@ -41,7 +38,7 @@ namespace MidnightDefense
 
                         PlayerInfo pInfo = Plugin.PlayerInfo.Find(p => p.Player == ev.Killer);
                         pInfo.DetectionPoints += Plugin.Instance.Config.FFDetectionPoints;
-                        pInfo.DetectedCheats.Add(CheatsEnum.FriendlyFire);
+                        pInfo.DetectedCheats.NoDuplicateAdd(CheatsEnum.FriendlyFire);
 
                         if (Plugin.Instance.Config.NegateFFDamage)
                             ev.IsAllowed = false;
@@ -79,7 +76,7 @@ namespace MidnightDefense
 
                         PlayerInfo pInfo = Plugin.PlayerInfo.Find(p => p.Player == ev.Attacker);
                         pInfo.DetectionPoints += Plugin.Instance.Config.FFDetectionPoints;
-                        pInfo.DetectedCheats.Add(CheatsEnum.FriendlyFire);
+                        pInfo.DetectedCheats.NoDuplicateAdd(CheatsEnum.FriendlyFire);
 
                         if (Plugin.Instance.Config.NegateFFDamage)
                             ev.IsAllowed = false;
@@ -103,7 +100,7 @@ namespace MidnightDefense
 
                         PlayerInfo pInfo = Plugin.PlayerInfo.Find(p => p.Player == ev.Attacker);
                         pInfo.DetectionPoints += Plugin.Instance.Config.InfiniteRangeDetectionPoints;
-                        pInfo.DetectedCheats.Add(CheatsEnum.InfiniteRange);
+                        pInfo.DetectedCheats.NoDuplicateAdd(CheatsEnum.InfiniteRange);
 
                         if (Plugin.Instance.Config.NegateInfiniteRangeDamage)
                             ev.IsAllowed = false;
@@ -132,14 +129,13 @@ namespace MidnightDefense
                 {
 
                     if (Plugin.Instance.Config.Debug)
-                        Log.Info("Player has been detected for Speedhack");
+                        Log.Info("Player has been detected for Speedhack\nCurrent Points: " + playerInfo.DetectionPoints);
 
                     PlayerLog log = new PlayerLog(ev.Shooter);
                     log.Log(LogType.Detected, Plugin.Instance.Translation.SpeedhackDetectionMessage);
 
-                    PlayerInfo pInfo = Plugin.PlayerInfo.Find(p => p.Player == ev.Shooter);
-                    pInfo.DetectionPoints += Plugin.Instance.Config.SpeedhackDetectionPoints;
-                    pInfo.DetectedCheats.Add(CheatsEnum.Speedhack);
+                    playerInfo.DetectionPoints += Plugin.Instance.Config.SpeedhackDetectionPoints;
+                    playerInfo.DetectedCheats.NoDuplicateAdd(CheatsEnum.Speedhack);
 
                     if (Plugin.Instance.Config.SpeedhackDetectionCancelEvent)
                         ev.IsAllowed = false;
@@ -168,13 +164,11 @@ namespace MidnightDefense
             Vector3 forward = ev.Shooter.CameraTransform.forward;
             if (Physics.Raycast(ev.Shooter.CameraTransform.position + forward, forward, out RaycastHit hit, 300f))
             {
+                Log.Info(hit.transform.gameObject.tag);
                 if (hit.transform.gameObject.tag == "Player")
                 {
-                    Player player = Player.Get(hit.transform.gameObject);
-                    if (player == null)
-                        return;
 
-                    if (player.SessionVariables.ContainsKey("IsNPC"))
+                    if (Plugin.PlayerInfo.Any(a => a.AimbotPlayer.GameObject == hit.transform.gameObject))
                     {
                         int currentHits = playerInfo.SilentAimbotHitCounter;
                         if (currentHits >= Plugin.Instance.Config.SilentAimbotHitThreshold)
@@ -186,7 +180,7 @@ namespace MidnightDefense
                             log.Log(LogType.Detected, Plugin.Instance.Translation.SilentAimbotDetectionMessage);
 
                             playerInfo.DetectionPoints += Plugin.Instance.Config.SilentAimbotDetectionPoints;
-                            playerInfo.DetectedCheats.Add(CheatsEnum.Aimbot);
+                            playerInfo.DetectedCheats.NoDuplicateAdd(CheatsEnum.Aimbot);
                         }
 
                         playerInfo.SilentAimbotHitCounter++;
@@ -240,7 +234,7 @@ namespace MidnightDefense
 
                 PlayerInfo playerInfo = Plugin.PlayerInfo.Find(p => p.Player == ev.Scp049);
                 playerInfo.DetectionPoints += Plugin.Instance.Config.SCP049DetectedMovementPoints;
-                playerInfo.DetectedCheats.Add(CheatsEnum.SCP049Movement);
+                playerInfo.DetectedCheats.NoDuplicateAdd(CheatsEnum.SCP049Movement);
 
                 PlayerLog playerLog = new PlayerLog(ev.Scp049);
                 playerLog.Log(LogType.Detected, Plugin.Instance.Translation.SCP049DetectedMessage);
@@ -260,7 +254,6 @@ namespace MidnightDefense
                     Player = ev.Player,
                     Position = new PlayerPositionData(ev.Player),
                     MonitorForAimbot = false,
-                    AimbotPlayer = new AntiAimbotPlayer(RoleType.NtfPrivate, new Vector3(scaleArr[0], scaleArr[1], scaleArr[2]), ev.Player),
                     SilentAimbotHitCounter = 0,
                     LastBulletFired = 0,
                     DetectedCheats = new List<CheatsEnum> { }
@@ -302,21 +295,27 @@ namespace MidnightDefense
         {
             for(; ; )
             {
-                List<PlayerInfo> suspectedPlayers = Plugin.PlayerInfo.FindAll(x => x.DetectionPoints >= Plugin.Instance.Config.PointThreshold);
+                List<PlayerInfo> suspectedPlayers = Plugin.PlayerInfo.FindAll(x=> x.DetectionPoints >= Plugin.Instance.Config.PointThreshold);
+
                 for (int i = 0; i < suspectedPlayers.Count; i++)
                 {
-                    if (Plugin.Instance.Config.AlertOnlineStaff)
-                        AlertOnlineStaff(suspectedPlayers[i].Player);
-
-                    _ = Webhook.SendWebhook(new Webhook
+                    if (suspectedPlayers[i].AlertCount <= Plugin.Instance.Config.AlertMaxTimes)
                     {
-                        detectedPlayer = suspectedPlayers[i].Player,
-                        Message = Plugin.Instance.Translation.DiscordAlertMessage,
-                        detectedCheats = suspectedPlayers[i].DetectedCheats.ToArray()
-                    });
+                        if (Plugin.Instance.Config.AlertOnlineStaff)
+                            AlertOnlineStaff(suspectedPlayers[i].Player);
+
+                        _ = Webhook.SendWebhook(new Webhook
+                        {
+                            detectedPlayer = suspectedPlayers[i].Player,
+                            Message = Plugin.Instance.Translation.DiscordAlertMessage,
+                            detectedCheats = suspectedPlayers[i].DetectedCheats.ToArray()
+                        });
+                    }
+
+                    suspectedPlayers[i].AlertCount++;
                 }
 
-                yield return Timing.WaitForSeconds(10f);
+                yield return Timing.WaitForSeconds(Plugin.Instance.Config.AlertTimeframe);
             }
         }
     }

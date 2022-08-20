@@ -62,9 +62,6 @@ namespace MidnightDefense
         [Description("How often should the Anti-Aimbot NPC teleport?")]
         public float SilentAimbotTeleportTime { get; set; } = 0.15f;
 
-        /*[Description("Should Anti-Aimbot trigger if a player submits a cheater report?")]
-        public bool SilentAimbotTriggerOnReport { get; set; } = true;*/
-
         [Description("How many cheater reports does it take for the Anti-Aimbot to trigger on the suspected player")]
         public int SilentAimbotTriggerReportAmount { get; set; } = 3;
 
@@ -94,6 +91,12 @@ namespace MidnightDefense
 
         [Description("When a player reaches a certain amount of points, should staff be alerted?")]
         public bool AlertOnlineStaff { get; set; } = true;
+
+        [Description("Maximum times an alert will notify staff / discord about the cheater")]
+        public int AlertMaxTimes { get; set; } = 3;
+
+        [Description("How often does the plugin check if anyone has reached the point threshold to alert staff")]
+        public float AlertTimeframe { get; set; } = 10f;
 
         [Description("Discord Webhook Username")]
         public string DiscordWebhookUsername { get; set; } = "Midnight Defense Alerts";

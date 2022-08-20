@@ -45,11 +45,16 @@ namespace MidnightDefense.Objects
         /// <summary>
         /// Anti-Aimbot NPC
         /// </summary>
-        public AntiAimbotPlayer AimbotPlayer { get; set; }
+        public AntiAimbotPlayer AimbotPlayer { get; private set; }
 
         /// <summary>
         /// GameObject for Player
         /// </summary>
         public GameObject GameObject;
+
+        /// <summary>
+        /// Get the amount of times that staff / discord have been alerted of the player
+        /// </summary>
+        public int AlertCount { get; set; }
     }
 }

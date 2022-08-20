@@ -15,7 +15,7 @@ namespace MidnightDefense
 
         public override string Author => "KuebV";
         public override string Name => "MidnightDefense";
-        public override Version Version => new Version(1, 1, 1);
+        public override Version Version => new Version(1, 2, 0);
 
         public static Plugin Instance;
 
@@ -28,6 +28,7 @@ namespace MidnightDefense
             Exiled.Events.Handlers.Player.Joined += EventHandlers.OnJoin;
             Exiled.Events.Handlers.Player.Left += EventHandlers.OnLeave;
             Exiled.Events.Handlers.Player.Dying += EventHandlers.BeforePlayerDeath;
+            Exiled.Events.Handlers.Player.Shot += EventHandlers.OnShot;
 
             Instance = this;
             Timing.RunCoroutine(API.MonitorAimbotEnumerator());
@@ -45,6 +46,7 @@ namespace MidnightDefense
             Exiled.Events.Handlers.Player.Joined -= EventHandlers.OnJoin;
             Exiled.Events.Handlers.Player.Left -= EventHandlers.OnLeave;
             Exiled.Events.Handlers.Player.Dying -= EventHandlers.BeforePlayerDeath;
+            Exiled.Events.Handlers.Player.Shot -= EventHandlers.OnShot;
 
             base.OnDisabled();
         }

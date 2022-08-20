@@ -26,7 +26,7 @@ namespace MidnightDefense
                 cheatsListed.Add(Enum.GetName(typeof(CheatsEnum), webhookArgs.detectedCheats[i]));
 
             string sb = "";
-            sb += string.Format("[<t:{0}:f>] ", DateTimeOffset.Now.ToUnixTimeMilliseconds());
+            sb += string.Format("[<t:{0}:f>] ", DateTimeOffset.Now.ToUnixTimeSeconds());
             sb += Plugin.Instance.Translation.DiscordAlertMessage
                 .Replace("%player%", webhookArgs.detectedPlayer.Nickname)
                 .Replace("%cheats%", string.Join(", ", cheatsListed));

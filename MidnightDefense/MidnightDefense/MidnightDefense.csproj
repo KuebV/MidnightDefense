@@ -91,6 +91,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Extensions.cs" />
     <Compile Include="Objects\AntiAimbotPlayer.cs" />
     <Compile Include="API.cs" />
     <Compile Include="Commands\MDAC.cs" />

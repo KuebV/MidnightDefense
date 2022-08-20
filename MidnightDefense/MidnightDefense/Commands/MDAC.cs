@@ -1,6 +1,7 @@
 ﻿using CommandSystem;
 using Exiled.API.Features;
 using Exiled.Permissions.Extensions;
+using MEC;
 using MidnightDefense.Objects;
 using Mirror;
 using System;
@@ -146,17 +147,23 @@ namespace MidnightDefense.Commands
                     if (playerinfo.MonitorForAimbot)
                     {
                         response = "MD-AC is no longer monitoring for Aimbot";
-                        AntiAimbotPlayer aimbotPlayer = playerinfo.AimbotPlayer;
+                        AntiAimbotPlayer aimbotPlayer = null;
                         aimbotPlayer.Destroy();
 
+                        API.MonitoringAimbot.Remove(playerinfo.Player);
                         playerinfo.MonitorForAimbot = false;
                         return true;
                     }
                     else
                     {
                         response = "MD-AC will now monitor that player for Aimbot";
-                        AntiAimbotPlayer antiAimbotPlayer = playerinfo.AimbotPlayer;
+
+                        float[] arr = Plugin.Instance.Config.SilentAimbotPlayerSize;
+                        AntiAimbotPlayer antiAimbotPlayer = new AntiAimbotPlayer(RoleType.NtfPrivate, new Vector3(arr[0], arr[1], arr[2]), triggerPlayer);
                         antiAimbotPlayer.Spawn();
+
+                        API.MonitoringAimbot.Add(playerinfo.Player, antiAimbotPlayer);
+                        playerinfo.MonitorForAimbot = true;
                         return true;
                     }
                 #endregion
