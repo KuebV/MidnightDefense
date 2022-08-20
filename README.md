@@ -21,6 +21,10 @@ Midnight Defense has protection against the following cheats with more planned i
   - Due to not much being known about this, to cut down on potential errors you have to use a command in order to have this feature on the player
   
 ## Configuration:
+
+### For more info about each configuration, view the link below:
+>- <a href="ConfigBreakdown.md#Configuration Breakdown">Configuration Breakdown</a>
+
 ```yml
 # Whether the plugin is enabled or not
 is_enabled: true
