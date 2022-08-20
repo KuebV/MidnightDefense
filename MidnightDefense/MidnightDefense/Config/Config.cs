@@ -59,6 +59,9 @@ namespace MidnightDefense
         [Description("How often should the Anti-Aimbot NPC teleport?")]
         public float SilentAimbotTeleportTime { get; set; } = 0.15f;
 
+        [Description("How many cheater reports does it take for the Anti-Aimbot to trigger on the suspected player")]
+        public int SilentAimbotTriggerReportAmount { get; set; } = 3;
+
         [Description("Speedhack Detection")]
         public bool SpeedhackDetection { get; set; } = true;
 
@@ -71,10 +74,36 @@ namespace MidnightDefense
         [Description("If Speedhack is detected, should the current action be cancelled?")]
         public bool SpeedhackDetectionCancelEvent { get; set; } = false;
 
+        /*[Description("Noclip Detection")]
+        public bool NoclipDetection { get; set; } = true;
+
+        [Description("Points given when suspected player attempts to NoClip")]
+        public int NoclipDetectionPoints { get; set; } = 1;
+
+        [Description("Rubberband to last recorded position when suspected player attempts to noclip")]
+        public bool NoclipRubberband { get; set; } = true;*/
+
         [Description("Alert Threshold (Points until any online staff are notified)")]
         public int PointThreshold { get; set; } = 5;
 
         [Description("When a player reaches a certain amount of points, should staff be alerted?")]
         public bool AlertOnlineStaff { get; set; } = true;
+
+        [Description("Maximum times an alert will notify staff / discord about the cheater")]
+        public int AlertMaxTimes { get; set; } = 3;
+
+        [Description("How often does the plugin check if anyone has reached the point threshold to alert staff")]
+        public float AlertTimeframe { get; set; } = 10f;
+
+        [Description("Enable Discord Webhook Alerts")]
+        public bool DiscordWebhookEnabled { get; set; } = false;
+
+        [Description("Discord Webhook Username")]
+        public string DiscordWebhookUsername { get; set; } = "Midnight Defense Alerts";
+
+        [Description("Discord Webhook URL")]
+        public string DiscordWebhookURL { get; set; } = "discordURLhere";
+
+        
     }
 }

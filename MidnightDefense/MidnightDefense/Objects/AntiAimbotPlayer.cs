@@ -31,8 +31,8 @@ namespace MidnightDefense
             //PlayerManager.AddPlayer(GameObject, CustomNetworkManager.slots);
 
             Player = new Player(GameObject);
-            Player.SessionVariables.Add("IsNPC", true);
 
+            // Feature is still experimental
             List<Player> playerList = Player.List.ToList();
             for(int i = 0; i < playerList.Count; i++)
             {

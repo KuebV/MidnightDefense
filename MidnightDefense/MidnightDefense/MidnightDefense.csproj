@@ -91,15 +91,20 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AntiAimbotPlayer.cs" />
+    <Compile Include="Extensions.cs" />
+    <Compile Include="Objects\AntiAimbotPlayer.cs" />
     <Compile Include="API.cs" />
     <Compile Include="Commands\MDAC.cs" />
     <Compile Include="Config\Config.cs" />
     <Compile Include="EventHandlers.cs" />
+    <Compile Include="Objects\CheatsEnum.cs" />
+    <Compile Include="Objects\PlayerInfo.cs" />
     <Compile Include="PlayerLog.cs" />
+    <Compile Include="Objects\PlayerPositionData.cs" />
     <Compile Include="Plugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Config\Translation.cs" />
+    <Compile Include="Webhook.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

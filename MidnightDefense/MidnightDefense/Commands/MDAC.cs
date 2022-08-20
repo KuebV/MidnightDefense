@@ -1,6 +1,8 @@
 ﻿using CommandSystem;
 using Exiled.API.Features;
 using Exiled.Permissions.Extensions;
+using MEC;
+using MidnightDefense.Objects;
 using Mirror;
 using System;
 using System.Collections.Generic;
@@ -71,12 +73,7 @@ namespace MidnightDefense.Commands
                     sb += "<color=#0073ff>Average Ping: </color><color=#bfbfbf>" + averageLatency + "ms</color>\n";
                     sb += "<color=#0073ff>Highest Ping: </color><color=#bfbfbf>" + highestLatency + "ms</color>\n";
 
-                    int suspectedPlayers = 0;
-                    for (int i = 0; i < Plugin.SuspectedPlayers.Count; i++)
-                    {
-                        if (Plugin.SuspectedPlayers.ElementAt(i).Value >= 1)
-                            suspectedPlayers++;
-                    }
+                    int suspectedPlayers = Plugin.PlayerInfo.Count(p => p.DetectionPoints > 0);
 
                     sb += "<color=#0073ff># of players suspected for cheating: </color><color=#bfbfbf>" + suspectedPlayers + "</color>\n";
                     sb += "<color=#0073ff>Midnight Defense Version: </color><color=#bfbfbf>" + Plugin.Instance.Version.ToString() + "</color>\n";
@@ -94,9 +91,11 @@ namespace MidnightDefense.Commands
                         return false;
                     }
 
+                    PlayerInfo playerInfo = Plugin.PlayerInfo.Find(p => p.Player == player);
+
                     string playerSB = "\n";
                     playerSB += "<color=#edba42>[Midnight Defense]</color>\n";
-                    playerSB += "<color=#0073ff>Currently Suspected: </color><color=#bfbfbf>" + (Plugin.SuspectedPlayers[player] >= 1 ? true : false).ToString() + "</color>\n";
+                    playerSB += "<color=#0073ff>Currently Suspected: </color><color=#bfbfbf>" + (playerInfo.DetectionPoints >= 1 ? true : false).ToString() + "</color>\n";
                     playerSB += "<color=#bfbfbf>---------------LOGS-----------------\n";
                     playerSB += Plugin.PlayerLogs[player];
 
@@ -143,14 +142,16 @@ namespace MidnightDefense.Commands
                         return false;
                     }
 
-                    if (Plugin.MonitoringAimbot.ContainsKey(triggerPlayer))
+                    PlayerInfo playerinfo = Plugin.PlayerInfo.Find(p => p.Player == triggerPlayer);
+
+                    if (playerinfo.MonitorForAimbot)
                     {
                         response = "MD-AC is no longer monitoring for Aimbot";
-                        AntiAimbotPlayer aimbotPlayer = Plugin.MonitoringAimbot[triggerPlayer];
+                        AntiAimbotPlayer aimbotPlayer = API.MonitoringAimbot[playerinfo.Player];
                         aimbotPlayer.Destroy();
 
-                        Plugin.MonitoringAimbot.Remove(triggerPlayer);
-
+                        API.MonitoringAimbot.Remove(playerinfo.Player);
+                        playerinfo.MonitorForAimbot = false;
                         return true;
                     }
                     else
@@ -158,19 +159,18 @@ namespace MidnightDefense.Commands
                         response = "MD-AC will now monitor that player for Aimbot";
 
                         float[] arr = Plugin.Instance.Config.SilentAimbotPlayerSize;
-                        AntiAimbotPlayer antiAimbotPlayer = new AntiAimbotPlayer(RoleType.ClassD, new Vector3(arr[0], arr[1], arr[2]), triggerPlayer);
+                        AntiAimbotPlayer antiAimbotPlayer = new AntiAimbotPlayer(RoleType.NtfPrivate, new Vector3(arr[0], arr[1], arr[2]), triggerPlayer);
                         antiAimbotPlayer.Spawn();
 
-                        antiAimbotPlayer.Player.TargetGhostsHashSet.Remove(triggerPlayer.Id);
-                        Plugin.MonitoringAimbot.Add(triggerPlayer, antiAimbotPlayer);
-                        Plugin.SilentAimbotHitCounter.Add(triggerPlayer, 0);
+                        API.MonitoringAimbot.Add(playerinfo.Player, antiAimbotPlayer);
+                        playerinfo.MonitorForAimbot = true;
                         return true;
                     }
                 #endregion
                 #region ANTI-CHEAT DISMISSAL
                 case "dismiss":
                     Player dismissPlayer = Player.Get(arguments.At(1));
-                    Plugin.SuspectedPlayers[dismissPlayer] = 0;
+                    Plugin.PlayerInfo.Find(p => p.Player == dismissPlayer).DetectionPoints = 0;
 
                     PlayerLog dismissalLog = new PlayerLog(dismissPlayer);
                     dismissalLog.Log(LogType.Informational, "Player has been dismissed by " + Player.Get(sender).Nickname);

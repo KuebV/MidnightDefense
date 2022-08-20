@@ -1,4 +1,5 @@
 ﻿using Exiled.API.Interfaces;
+using MidnightDefense.Objects;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -10,7 +11,7 @@ namespace MidnightDefense
 {
     public class Translation : ITranslation
     {
-        [Description("Friendly-Fire Protection Detection Message")]
+        [Description("Friendly-Fire Detection Message")]
         public string FFDetectedMessage { get; set; } = "Player has been suspected for using <color=#2ea339>Friendly-Fire</color> despite it being disabled";
 
         [Description("SCP-049 Movement Detection Message")]
@@ -28,8 +29,12 @@ namespace MidnightDefense
         [Description("Alert Message")]
         public string PointThresholdMessage { get; set; } = "<color=#f0311f>%player% has been detected for cheating!</color>";
 
+        [Description("Discord Alert Message")]
+        public string DiscordAlertMessage { get; set; } = "%player% has been detected for cheating! Detected Cheats [%cheats%]";
+
         [Description("Anti-Aimbot NPC Name")]
         public string SilentAimbotNPCName { get; set; } = "MD-AC";
+
 
     }
 }
