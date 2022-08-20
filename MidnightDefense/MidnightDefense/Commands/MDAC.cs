@@ -147,7 +147,7 @@ namespace MidnightDefense.Commands
                     if (playerinfo.MonitorForAimbot)
                     {
                         response = "MD-AC is no longer monitoring for Aimbot";
-                        AntiAimbotPlayer aimbotPlayer = null;
+                        AntiAimbotPlayer aimbotPlayer = API.MonitoringAimbot[playerinfo.Player];
                         aimbotPlayer.Destroy();
 
                         API.MonitoringAimbot.Remove(playerinfo.Player);

@@ -128,9 +128,6 @@ namespace MidnightDefense
                 if (lastShot < Plugin.Instance.Config.SpeedhackDetectionThreshold)
                 {
 
-                    if (Plugin.Instance.Config.Debug)
-                        Log.Info("Player has been detected for Speedhack\nCurrent Points: " + playerInfo.DetectionPoints);
-
                     PlayerLog log = new PlayerLog(ev.Shooter);
                     log.Log(LogType.Detected, Plugin.Instance.Translation.SpeedhackDetectionMessage);
 
@@ -168,13 +165,11 @@ namespace MidnightDefense
                 if (hit.transform.gameObject.tag == "Player")
                 {
 
-                    if (Plugin.PlayerInfo.Any(a => a.AimbotPlayer.GameObject == hit.transform.gameObject))
+                    if (API.MonitoringAimbot.Any(x => x.Value.GameObject == hit.transform.gameObject)) 
                     {
                         int currentHits = playerInfo.SilentAimbotHitCounter;
                         if (currentHits >= Plugin.Instance.Config.SilentAimbotHitThreshold)
                         {
-                            if (Plugin.Instance.Config.Debug)
-                                Log.Info("Player has been detected for Aimbot");
 
                             PlayerLog log = new PlayerLog(ev.Shooter);
                             log.Log(LogType.Detected, Plugin.Instance.Translation.SilentAimbotDetectionMessage);
@@ -304,12 +299,15 @@ namespace MidnightDefense
                         if (Plugin.Instance.Config.AlertOnlineStaff)
                             AlertOnlineStaff(suspectedPlayers[i].Player);
 
-                        _ = Webhook.SendWebhook(new Webhook
+                        if (Plugin.Instance.Config.DiscordWebhookEnabled)
                         {
-                            detectedPlayer = suspectedPlayers[i].Player,
-                            Message = Plugin.Instance.Translation.DiscordAlertMessage,
-                            detectedCheats = suspectedPlayers[i].DetectedCheats.ToArray()
-                        });
+                            _ = Webhook.SendWebhook(new Webhook
+                            {
+                                detectedPlayer = suspectedPlayers[i].Player,
+                                Message = Plugin.Instance.Translation.DiscordAlertMessage,
+                                detectedCheats = suspectedPlayers[i].DetectedCheats.ToArray()
+                            });
+                        }
                     }
 
                     suspectedPlayers[i].AlertCount++;

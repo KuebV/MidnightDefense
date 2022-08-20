@@ -98,6 +98,9 @@ namespace MidnightDefense
         [Description("How often does the plugin check if anyone has reached the point threshold to alert staff")]
         public float AlertTimeframe { get; set; } = 10f;
 
+        [Description("Enable Discord Webhook Alerts")]
+        public bool DiscordWebhookEnabled { get; set; } = false;
+
         [Description("Discord Webhook Username")]
         public string DiscordWebhookUsername { get; set; } = "Midnight Defense Alerts";
 
