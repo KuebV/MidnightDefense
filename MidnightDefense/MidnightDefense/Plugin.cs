@@ -15,7 +15,7 @@ namespace MidnightDefense
 
         public override string Author => "KuebV";
         public override string Name => "MidnightDefense";
-        public override Version Version => new Version(1, 2, 7);
+        public override Version Version => new Version(1, 3, 0);
 
         public static Plugin Instance;
 
@@ -25,14 +25,23 @@ namespace MidnightDefense
             Exiled.Events.Handlers.Player.Shooting += EventHandlers.OnShooting;
             Exiled.Events.Handlers.Scp049.StartingRecall += EventHandlers.OnRecall;
             Exiled.Events.Handlers.Scp049.FinishingRecall += EventHandlers.OnRevive;
-            Exiled.Events.Handlers.Player.Joined += EventHandlers.OnJoin;
             Exiled.Events.Handlers.Player.Left += EventHandlers.OnLeave;
             Exiled.Events.Handlers.Player.Dying += EventHandlers.BeforePlayerDeath;
             Exiled.Events.Handlers.Player.Shot += EventHandlers.OnShot;
+            Exiled.Events.Handlers.Player.ChangingRole += EventHandlers.ChangeClass;
 
             Instance = this;
-            Timing.RunCoroutine(API.MonitorAimbotEnumerator());
+            
+            if (Instance.Config.SilentAimbotDetection)
+                Timing.RunCoroutine(API.MonitorAimbotEnumerator());
+
+            if (Instance.Config.NoclipDetection)
+                Timing.RunCoroutine(API.MonitorPlayerSpeed());
+
             Timing.RunCoroutine(EventHandlers.CheckSuspectedPlayerPoints());
+
+            _ = Webhook.RawSendWebhook(Translation.DiscordEnableMessage.Replace("%version%", Version.ToString()));
+
             base.OnEnabled();
         }
 
@@ -43,10 +52,10 @@ namespace MidnightDefense
             Exiled.Events.Handlers.Player.Shooting -= EventHandlers.OnShooting;
             Exiled.Events.Handlers.Scp049.StartingRecall -= EventHandlers.OnRecall;
             Exiled.Events.Handlers.Scp049.FinishingRecall -= EventHandlers.OnRevive;
-            Exiled.Events.Handlers.Player.Joined -= EventHandlers.OnJoin;
             Exiled.Events.Handlers.Player.Left -= EventHandlers.OnLeave;
             Exiled.Events.Handlers.Player.Dying -= EventHandlers.BeforePlayerDeath;
             Exiled.Events.Handlers.Player.Shot -= EventHandlers.OnShot;
+            Exiled.Events.Handlers.Player.ChangingRole -= EventHandlers.ChangeClass;
 
             base.OnDisabled();
         }

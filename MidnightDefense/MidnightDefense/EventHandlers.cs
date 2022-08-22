@@ -23,6 +23,9 @@ namespace MidnightDefense
             if (ev.Target == null) return;
             if (ev.Target.IsScp) return;
 
+            // Suicide Checking
+            if (ev.Killer == ev.Target) return;
+
             if (Plugin.Instance.Config.FFDetection)
             {
                 if (!Server.FriendlyFire)
@@ -234,35 +237,43 @@ namespace MidnightDefense
         }
         #endregion
 
-        public static void OnJoin(JoinedEventArgs ev)
-        {
-
-            Timing.CallDelayed(3f, () =>
-            {
-                float[] scaleArr = Plugin.Instance.Config.SilentAimbotPlayerSize;
-                Plugin.PlayerInfo.Add(new PlayerInfo
-                {
-                    Player = ev.Player,
-                    Position = new PlayerPositionData(ev.Player),
-                    MonitorForAimbot = false,
-                    SilentAimbotHitCounter = 0,
-                    LastBulletFired = 0,
-                    DetectedCheats = new List<CheatsEnum> { }
-                });
-
-                PlayerLog playerLog = new PlayerLog(ev.Player);
-                playerLog.Log(LogType.Informational, "<color=#6ff263>--START OF LOG--</color>");
-
-
-                //This will be implemented on the Beta Branch at a later date
-                /*if (!Plugin.PlayerPositions.Any(x => x.player == ev.Player))
-                    Plugin.PlayerPositions.Add(new PlayerPositionData(ev.Player));*/
-
-            });
-            
-        }
-
         public static void OnLeave(LeftEventArgs ev) => Plugin.PlayerInfo.RemoveAll(p => p.Player == ev.Player);
+
+        public static void ChangeClass(ChangingRoleEventArgs ev)
+        {
+            if (!Plugin.PlayerInfo.Any(x => x.Player == ev.Player))
+            {
+                Timing.CallDelayed(3f, () =>
+                {
+                    float[] scaleArr = Plugin.Instance.Config.SilentAimbotPlayerSize;
+                    Plugin.PlayerInfo.Add(new PlayerInfo
+                    {
+                        Player = ev.Player,
+                        Position = new PlayerPositionData(ev.Player),
+                        MonitorForAimbot = false,
+                        SilentAimbotHitCounter = 0,
+                        LastBulletFired = 0,
+                        DetectedCheats = new List<CheatsEnum> { },
+                        DetectionPoints = 0,
+                    });
+
+                    PlayerLog playerLog = new PlayerLog(ev.Player);
+                    playerLog.Log(LogType.Informational, "<color=#6ff263>--START OF LOG--</color>");
+
+                    Log.Info(ev.Player.Nickname + " has been initalized!");
+                });
+            }
+
+            if (ev.NewRole == RoleType.Spectator || ev.NewRole == RoleType.Tutorial)
+            {
+                Plugin.PlayerInfo.Find(x => x.Player == ev.Player).Position.LastPosition = new Vector3(0f, 0f, 0f);
+                return;
+            }
+
+            Plugin.PlayerInfo.Find(x => x.Player == ev.Player).Position.LastPosition = ev.Player.Position;
+
+
+        }
 
         public static void AlertOnlineStaff(Player suspectedPlayer)
         {

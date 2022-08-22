@@ -43,11 +43,6 @@ namespace MidnightDefense.Objects
         public bool MonitorForAimbot { get; set; }
 
         /// <summary>
-        /// Anti-Aimbot NPC
-        /// </summary>
-        public AntiAimbotPlayer AimbotPlayer { get; private set; }
-
-        /// <summary>
         /// GameObject for Player
         /// </summary>
         public GameObject GameObject;

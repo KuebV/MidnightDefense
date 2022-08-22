@@ -74,14 +74,26 @@ namespace MidnightDefense
         [Description("If Speedhack is detected, should the current action be cancelled?")]
         public bool SpeedhackDetectionCancelEvent { get; set; } = false;
 
-        /*[Description("Noclip Detection")]
+        [Description("Noclip Detection")]
         public bool NoclipDetection { get; set; } = true;
 
         [Description("Points given when suspected player attempts to NoClip")]
         public int NoclipDetectionPoints { get; set; } = 1;
 
         [Description("Rubberband to last recorded position when suspected player attempts to noclip")]
-        public bool NoclipRubberband { get; set; } = true;*/
+        public bool NoclipRubberband { get; set; } = true;
+
+        [Description("Maximum Velocity before Noclip is detected (Don't change this to anything lower than the default!)")]
+        public float NoclipMaximumVelocity { get; set; } = 7.571895f;
+
+        [Description("How often does the plugin check the player velocity for noclip?")]
+        public float NoClipDetectionSpeed { get; set; } = 0.5f;
+
+        [Description("Should NoClip Detection activate even on staff?")]
+        public bool NoClipDetectionStaff { get; set; } = false;
+
+        [Description("What roles should be allowed to use NoClip even if they aren't staff")]
+        public RoleType[] NoClipAllowedRoles { get; set; } = new RoleType[] { RoleType.Tutorial };
 
         [Description("Alert Threshold (Points until any online staff are notified)")]
         public int PointThreshold { get; set; } = 5;

@@ -26,11 +26,17 @@ namespace MidnightDefense
         [Description("Silent Aimbot Detection Message")]
         public string SilentAimbotDetectionMessage { get; set; } = "Player has been suspected for using <color=#2ea339>Silent Aimbot</color>";
 
+        [Description("Noclip Detection Message")]
+        public string NoclipDetectionMessage { get; set; } = "Player has been suspected for using <color=#2ea339>Noclip</color>";
+
         [Description("Alert Message")]
         public string PointThresholdMessage { get; set; } = "<color=#f0311f>%player% has been detected for cheating!</color>";
 
         [Description("Discord Alert Message")]
         public string DiscordAlertMessage { get; set; } = "%player% has been detected for cheating! Detected Cheats [%cheats%]";
+
+        [Description("When the plugin is enabled, the webhook will send this message")]
+        public string DiscordEnableMessage { get; set; } = "Midnight Defense (Version: %version%) will send alerts to this channel!";
 
         [Description("Anti-Aimbot NPC Name")]
         public string SilentAimbotNPCName { get; set; } = "MD-AC";

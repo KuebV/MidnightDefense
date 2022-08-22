@@ -40,6 +40,19 @@ namespace MidnightDefense
 
         }
 
+        public static async Task RawSendWebhook(string content)
+        {
+            string sb = "";
+            sb += string.Format("[<t:{0}:f>] ", DateTimeOffset.Now.ToUnixTimeSeconds());
+            sb += content;
+
+            Post(Plugin.Instance.Config.DiscordWebhookURL, new NameValueCollection()
+            {
+                { "username", Plugin.Instance.Config.DiscordWebhookUsername },
+                { "content", sb }
+            });
+        }
+
         private static byte[] Post(string uri, NameValueCollection pair)
         {
             using (WebClient wc = new WebClient())
