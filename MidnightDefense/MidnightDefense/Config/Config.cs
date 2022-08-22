@@ -93,7 +93,7 @@ namespace MidnightDefense
         public bool NoClipDetectionStaff { get; set; } = false;
 
         [Description("What roles should be allowed to use NoClip even if they aren't staff")]
-        public RoleType[] NoClipAllowedRoles { get; set; } = new RoleType[] { RoleType.Tutorial };
+        public RoleType[] NoClipAllowedRoles { get; set; } = new RoleType[] { RoleType.Tutorial };  
 
         [Description("Alert Threshold (Points until any online staff are notified)")]
         public int PointThreshold { get; set; } = 5;
