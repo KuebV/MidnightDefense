@@ -12,6 +12,7 @@ namespace MidnightDefense.Objects
         SCP049Movement,
         InfiniteRange,
         Speedhack,
-        Aimbot
+        Aimbot,
+        Noclip
     }
 }

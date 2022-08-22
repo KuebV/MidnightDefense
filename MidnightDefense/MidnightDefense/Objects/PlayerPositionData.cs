@@ -18,20 +18,32 @@ namespace MidnightDefense
 
             if (!player.IsAlive)
                 LastPosition = Vector3.zero;
+            else
+                LastPosition = player.Position;
+            
 
-            Rigidbody = GameObject.GetComponent<Rigidbody>();
-            Velocity = Rigidbody.velocity;
+            Position = player.Position;
         }
         public Player player { get; }
 
         public Vector3 LastPosition { get; set; }
 
-        public Vector3 Velocity { get; set; }
+        public Vector3 Position
+        {
+            get => player.Position;
+            set => ReferenceHub.playerMovementSync.OverridePosition(value);
+        }
 
         public ReferenceHub ReferenceHub { get; }
 
         public GameObject GameObject { get; }
+        public float Velocity { get => ReferenceHub.playerMovementSync.PlayerVelocity.magnitude; }
 
-        public Rigidbody Rigidbody { get; }
+        public float DistanceBetweenPositions
+        {
+            get => (LastPosition - Position).MagnitudeIgnoreY();
+        }
+
+        public float MaxiumumSpeed { get; set; } = 0;
     }
 }

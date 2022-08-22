@@ -1,4 +1,6 @@
-﻿using Exiled.API.Features;
+﻿using CustomPlayerEffects;
+using Exiled.API.Enums;
+using Exiled.API.Features;
 using MEC;
 using MidnightDefense.Objects;
 using Mirror;
@@ -50,14 +52,63 @@ namespace MidnightDefense
             }
         }
 
-
-        //This will be implemented on the Beta Branch at a later date
-        /*public static IEnumerator<float> MonitorPlayerSpeed()
+        public static IEnumerator<float> MonitorPlayerSpeed()
         {
-            for (; ;)
+            Config cfg = Plugin.Instance.Config;
+            for (; ; )
             {
-                
+                List<PlayerInfo> playersList = Plugin.PlayerInfo;
+
+                for (int i = 0; i < playersList.Count; i++)
+                {
+                    PlayerInfo playerInfo = playersList[i];
+
+                    if (!playerInfo.Player.IsAlive)
+                        continue;
+
+                    PlayerPositionData posData = playerInfo.Position;
+                    List<PlayerEffect> currentEffects = playerInfo.Player.ActiveEffects.ToList();
+
+                    if (posData.DistanceBetweenPositions > cfg.NoclipMaximumVelocity)
+                    {
+                        if (playerInfo.Player.RemoteAdminAccess && !cfg.NoClipDetectionStaff)
+                            continue;
+
+                        if (cfg.NoClipAllowedRoles.Contains(playerInfo.Player.Role))
+                            continue;
+
+                        if (posData.LastPosition == new Vector3(0f, 0f, 0f))
+                            continue;
+
+                        if (currentEffects.Any(x => x.name == "Scp207"))
+                            continue;
+
+                        if (posData.DistanceBetweenPositions > 75f)
+                            continue;
+
+                        Log.Info(playerInfo.Player.Nickname + " is moving faster than usual! " + " +" + posData.DistanceBetweenPositions);
+
+                        if (cfg.NoclipRubberband)
+                            playerInfo.Player.Position = posData.LastPosition;
+
+
+                        PlayerLog playerLog = new PlayerLog(playerInfo.Player);
+                        playerLog.Log(LogType.Detected, Plugin.Instance.Translation.NoclipDetectionMessage);
+
+                        playerInfo.DetectionPoints += Plugin.Instance.Config.NoclipDetectionPoints;
+                        playerInfo.DetectedCheats.NoDuplicateAdd(CheatsEnum.Noclip);
+
+
+                    }
+
+                    Plugin.PlayerInfo[i].Position.LastPosition = playerInfo.Player.Position;
+
+                    
+                }
+
+                yield return Timing.WaitForSeconds(cfg.NoClipDetectionSpeed);
             }
-        }*/
+        }
+
     }
 }
