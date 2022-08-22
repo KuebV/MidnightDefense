@@ -270,7 +270,10 @@ namespace MidnightDefense
                 return;
             }
 
-            Plugin.PlayerInfo.Find(x => x.Player == ev.Player).Position.LastPosition = ev.Player.Position;
+            Timing.CallDelayed(3f, () =>
+            {
+                Plugin.PlayerInfo.Find(x => x.Player == ev.Player).Position.LastPosition = ev.Player.Position;
+            });
 
 
         }

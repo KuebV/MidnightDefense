@@ -83,8 +83,15 @@ namespace MidnightDefense
                         if (currentEffects.Any(x => x.name == "Scp207"))
                             continue;
 
-                        if (posData.DistanceBetweenPositions > 75f)
+                        if (posData.DistanceBetweenPositions > 45f)
                             continue;
+
+                        if (playerInfo.Player.Role == RoleType.Scp096 || playerInfo.Player.Role == RoleType.Scp079 || playerInfo.Player.Role == RoleType.Scp173)
+                            continue;
+
+                        if (Physics.Raycast(posData.Position, Vector3.down, out RaycastHit hit))
+                            if (hit.transform.gameObject.tag == "LiftTarget")
+                                continue;
 
                         Log.Info(playerInfo.Player.Nickname + " is moving faster than usual! " + " +" + posData.DistanceBetweenPositions);
 
