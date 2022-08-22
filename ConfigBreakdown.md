@@ -105,6 +105,43 @@ speedhack_detection_cancel_event: false
 ```
 > If the detected player triggers speedhack, then should their shots just be cancelled
 
+## NoClip
+```yml
+noclip_detection: true
+```
+> Cheaters are able to toggle noclip on and off without permission from the server.
+
+```yml
+noclip_detection_points: 1
+```
+> If NoClip is detected, this is how many points will be added to the players current detection points
+
+```yml
+noclip_rubberband: true
+```
+> If you attempt going any faster than should be physically possible, should you be teleported back to a point where you are safe?
+
+```yml
+noclip_maximum_velocity: 7.57189512
+```
+> Do not, and I repeat, do not set this value any lower than what it already is. Midnight Defense uses a custom velocity calculation to determine velocity. You can set it higher, but be aware cheaters may be able to move faster
+
+```yml
+no_clip_detection_speed: 0.5
+```
+> How often the plugin checks if a player may be noclipping
+
+```yml
+no_clip_detection_staff: false
+```
+> Should it detect staff members? I personally wouldn't enable this unless you never want to use noclip again. This will be eventually fixed with a new system
+
+```yml
+no_clip_allowed_roles:
+- Tutorial
+```
+> If you want a player who is non-staff but you want them to be able to NoClip around, you would set them to a tutorial
+
 ## Miscellaneous / Staff
 ```yml
 point_threshold: 10
