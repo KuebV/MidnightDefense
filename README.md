@@ -120,7 +120,13 @@ MDAC Subcommands:
 
 ## Permissions
 ```
-md.general
+md.general - Access all of the Midnight Defense Commands
+md.ffbypass - Bypass the Friendly-Fire Detection
+md.049bypass - Bypass SCP-049 Movement Detection
+md.rangebypass - Bypass Infinite Range Detection
+md.speedhackbypass - Bypass Speedhack Detection
+md.aimbotbypass - Bypass Aimbot Detection
+md.noclipbypass - Bypass NoClip Detection
 ```
 
 ## How Anti-aimbot works
