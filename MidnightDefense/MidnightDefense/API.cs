@@ -1,6 +1,7 @@
 ﻿using CustomPlayerEffects;
 using Exiled.API.Enums;
 using Exiled.API.Features;
+using Exiled.Permissions.Extensions;
 using MEC;
 using MidnightDefense.Objects;
 using Mirror;
@@ -71,46 +72,51 @@ namespace MidnightDefense
 
                     if (posData.DistanceBetweenPositions > cfg.NoclipMaximumVelocity)
                     {
-                        if (playerInfo.Player.RemoteAdminAccess && !cfg.NoClipDetectionStaff)
-                            continue;
+                        // If Statement Hell
 
-                        if (cfg.NoClipAllowedRoles.Contains(playerInfo.Player.Role))
-                            continue;
+                        if (playerInfo.Player.CheckPermission("md.speedhackbypass")) continue;
+                        if (cfg.NoClipAllowedRoles.Contains(playerInfo.Player.Role)) continue;
+                        if (posData.LastPosition == new Vector3(0f, 0f, 0f)) continue;
+                        if (currentEffects.Any(x => x.name == "Scp207")) continue;
+                        if (posData.DistanceBetweenPositions > 45f) continue;
+                        if (playerInfo.Player.Role == RoleType.Scp096 || playerInfo.Player.Role == RoleType.Scp079 || playerInfo.Player.Role == RoleType.Scp173) continue;
 
-                        if (posData.LastPosition == new Vector3(0f, 0f, 0f))
-                            continue;
-
-                        if (currentEffects.Any(x => x.name == "Scp207"))
-                            continue;
-
-                        if (posData.DistanceBetweenPositions > 45f)
-                            continue;
-
-                        if (playerInfo.Player.Role == RoleType.Scp096 || playerInfo.Player.Role == RoleType.Scp079 || playerInfo.Player.Role == RoleType.Scp173)
-                            continue;
-
+                        // Bug Fixed! If you were on in an elevator, you would have a chance of being teleported back into the elevator on the previous floor
                         if (Physics.Raycast(posData.Position, Vector3.down, out RaycastHit hit))
                             if (hit.transform.gameObject.tag == "LiftTarget")
                                 continue;
 
-                        Log.Info(playerInfo.Player.Nickname + " is moving faster than usual! " + " +" + posData.DistanceBetweenPositions);
+                        if (Plugin.BetaBranch)
+                            Log.Info(playerInfo.Player.Nickname + " is moving faster than usual! " + " +" + posData.DistanceBetweenPositions);
 
                         if (cfg.NoclipRubberband)
                             playerInfo.Player.Position = posData.LastPosition;
 
 
                         PlayerLog playerLog = new PlayerLog(playerInfo.Player);
-                        playerLog.Log(LogType.Detected, Plugin.Instance.Translation.NoclipDetectionMessage);
+                        playerLog.Log(LogType.Detected, Plugin.Instance.Translation.SpeedhackDetectionMessage);
 
-                        playerInfo.DetectionPoints += Plugin.Instance.Config.NoclipDetectionPoints;
-                        playerInfo.DetectedCheats.NoDuplicateAdd(CheatsEnum.Noclip);
+                        playerInfo.DetectionPoints += Plugin.Instance.Config.SpeedhackDetectionPoints;
+                        playerInfo.DetectedCheats.NoDuplicateAdd(CheatsEnum.Speedhack);
+                    }
 
+                    if (cfg.NoClipFindSafePosition)
+                    {
+                        if (playerInfo.Player.CheckPermission("md.noclipbypass ")) continue;
+                        if (cfg.NoClipAllowedRoles.Contains(playerInfo.Player.Role)) continue;
+                        if (playerInfo.Player.Role == RoleType.Scp106) continue;
 
+                        if (!Physics.Raycast(posData.Position, Vector3.down, out RaycastHit hit))
+                        {
+                            if (Plugin.BetaBranch)
+                                Log.Info("There's nothing below the player!");
+
+                            playerInfo.Position.ReferenceHub.playerMovementSync.ForceLastSafePosition("MDAC-NOCLIP");
+
+                        }
                     }
 
                     Plugin.PlayerInfo[i].Position.LastPosition = playerInfo.Player.Position;
-
-                    
                 }
 
                 yield return Timing.WaitForSeconds(cfg.NoClipDetectionSpeed);

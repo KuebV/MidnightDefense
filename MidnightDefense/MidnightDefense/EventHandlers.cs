@@ -1,5 +1,6 @@
 ﻿using Exiled.API.Features;
 using Exiled.Events.EventArgs;
+using Exiled.Permissions.Extensions;
 using MEC;
 using MidnightDefense.Objects;
 using System;
@@ -12,12 +13,14 @@ namespace MidnightDefense
     public class EventHandlers
     {
 
+        private Config config;
+        public EventHandlers(Config cfg) => config = cfg;
         /// <summary>
         /// Anti Human-Teamkilling when FF is OFF
         /// </summary>
         /// <param name="ev"></param>
 
-        public static void BeforePlayerDeath(DyingEventArgs ev)
+        public void BeforePlayerDeath(DyingEventArgs ev)
         {
             if (ev.Killer == null) return;
             if (ev.Target == null) return;
@@ -26,7 +29,10 @@ namespace MidnightDefense
             // Suicide Checking
             if (ev.Killer == ev.Target) return;
 
-            if (Plugin.Instance.Config.FFDetection)
+            if (ev.Killer.CheckPermission("md.ffbypass"))
+                return;
+
+            if (config.FFDetection)
             {
                 if (!Server.FriendlyFire)
                 {
@@ -40,10 +46,10 @@ namespace MidnightDefense
                         playerLog.Log(LogType.Detected, ffMessage);
 
                         PlayerInfo pInfo = Plugin.PlayerInfo.Find(p => p.Player == ev.Killer);
-                        pInfo.DetectionPoints += Plugin.Instance.Config.FFDetectionPoints;
+                        pInfo.DetectionPoints += config.FFDetectionPoints;
                         pInfo.DetectedCheats.NoDuplicateAdd(CheatsEnum.FriendlyFire);
 
-                        if (Plugin.Instance.Config.NegateFFDamage)
+                        if (config.NegateFFDamage)
                             ev.IsAllowed = false;
 
                     }
@@ -55,7 +61,7 @@ namespace MidnightDefense
         /// Prevents SCP Friendly-Fire & SCP Teamkilling
         /// </summary>
         /// <param name="ev"></param>
-        public static void OnPlayerHurt(HurtingEventArgs ev)
+        public void OnPlayerHurt(HurtingEventArgs ev)
         {
 
             if (ev.Attacker == null) return;
@@ -63,7 +69,10 @@ namespace MidnightDefense
             if (ev.Attacker.IsHuman) return;
             if (ev.Target.IsHuman) return;
 
-            if (Plugin.Instance.Config.FFDetection)
+            if (ev.Attacker.CheckPermission("md.ffbypass"))
+                return;
+
+            if (config.FFDetection)
             {
                 if (!Server.FriendlyFire)
                 {
@@ -78,10 +87,10 @@ namespace MidnightDefense
                         playerLog.Log(LogType.Detected, ffMessage);
 
                         PlayerInfo pInfo = Plugin.PlayerInfo.Find(p => p.Player == ev.Attacker);
-                        pInfo.DetectionPoints += Plugin.Instance.Config.FFDetectionPoints;
+                        pInfo.DetectionPoints += config.FFDetectionPoints;
                         pInfo.DetectedCheats.NoDuplicateAdd(CheatsEnum.FriendlyFire);
 
-                        if (Plugin.Instance.Config.NegateFFDamage)
+                        if (config.NegateFFDamage)
                             ev.IsAllowed = false;
 
                     }
@@ -89,76 +98,44 @@ namespace MidnightDefense
                 }
             }
 
-            if (Plugin.Instance.Config.InfiniteRangeDetection)
+            if (config.InfiniteRangeDetection)
             {
                 if (ev.Attacker.IsScp)
                 {
                     Vector3 attackerPosition = ev.Attacker.Position;
                     Vector3 targetPosition = ev.Target.Position;
                     float distance = Vector3.Distance(targetPosition, attackerPosition);
-                    if (distance > Plugin.Instance.Config.RangeDistance)
+                    if (distance > config.RangeDistance)
                     {
                         PlayerLog log = new PlayerLog(ev.Attacker);
                         log.Log(LogType.Detected, Plugin.Instance.Translation.InfiniteRangeDetectionMessage);
 
                         PlayerInfo pInfo = Plugin.PlayerInfo.Find(p => p.Player == ev.Attacker);
-                        pInfo.DetectionPoints += Plugin.Instance.Config.InfiniteRangeDetectionPoints;
+                        pInfo.DetectionPoints += config.InfiniteRangeDetectionPoints;
                         pInfo.DetectedCheats.NoDuplicateAdd(CheatsEnum.InfiniteRange);
 
-                        if (Plugin.Instance.Config.NegateInfiniteRangeDamage)
+                        if (config.NegateInfiniteRangeDamage)
                             ev.IsAllowed = false;
                     }
                 }
             }
 
-            
-
         }
-
-        /// <summary>
-        /// Speedhack protection is very primitive since not much is known how it actually works
-        /// 
-        /// </summary>
-        /// <param name="ev"></param>
-        public static void OnShooting(ShootingEventArgs ev)
-        {
-
-            PlayerInfo playerInfo = Plugin.PlayerInfo.Find(p => p.Player == ev.Shooter);
-            if (Plugin.Instance.Config.SpeedhackDetection)
-            {
-                long milliseconds = DateTimeOffset.Now.ToUnixTimeMilliseconds();
-                long lastShot = milliseconds - playerInfo.LastBulletFired;
-                if (lastShot < Plugin.Instance.Config.SpeedhackDetectionThreshold)
-                {
-
-                    PlayerLog log = new PlayerLog(ev.Shooter);
-                    log.Log(LogType.Detected, Plugin.Instance.Translation.SpeedhackDetectionMessage);
-
-                    playerInfo.DetectionPoints += Plugin.Instance.Config.SpeedhackDetectionPoints;
-                    playerInfo.DetectedCheats.NoDuplicateAdd(CheatsEnum.Speedhack);
-
-                    if (Plugin.Instance.Config.SpeedhackDetectionCancelEvent)
-                        ev.IsAllowed = false;
-                }
-
-                playerInfo.LastBulletFired = milliseconds;
-            }
-
-            
-        }
-
 
         /// <summary>
         /// Anti-Aimbot Protections
         /// </summary>
         /// <param name="ev"></param>
-        public static void OnShot(ShotEventArgs ev)
+        public void OnShot(ShotEventArgs ev)
         {
-            if (!Plugin.Instance.Config.SilentAimbotDetection)
+            if (!config.SilentAimbotDetection)
                 return;
 
             PlayerInfo playerInfo = Plugin.PlayerInfo.Find(p => p.Player == ev.Shooter);
             if (!playerInfo.MonitorForAimbot)
+                return;
+
+            if (ev.Shooter.CheckPermission("md.aimbotbypass"))
                 return;
 
             Vector3 forward = ev.Shooter.CameraTransform.forward;
@@ -170,13 +147,13 @@ namespace MidnightDefense
                     if (API.MonitoringAimbot.Any(x => x.Value.GameObject == hit.transform.gameObject)) 
                     {
                         int currentHits = playerInfo.SilentAimbotHitCounter;
-                        if (currentHits >= Plugin.Instance.Config.SilentAimbotHitThreshold)
+                        if (currentHits >= config.SilentAimbotHitThreshold)
                         {
 
                             PlayerLog log = new PlayerLog(ev.Shooter);
                             log.Log(LogType.Detected, Plugin.Instance.Translation.SilentAimbotDetectionMessage);
 
-                            playerInfo.DetectionPoints += Plugin.Instance.Config.SilentAimbotDetectionPoints;
+                            playerInfo.DetectionPoints += config.SilentAimbotDetectionPoints;
                             playerInfo.DetectedCheats.NoDuplicateAdd(CheatsEnum.Aimbot);
                         }
 
@@ -199,9 +176,9 @@ namespace MidnightDefense
         /// Store their location in a Vector3 in a dictionary, and check it when they are revived
         /// </summary>
         /// <param name="ev"></param>
-        public static void OnRecall(StartingRecallEventArgs ev)
+        public void OnRecall(StartingRecallEventArgs ev)
         {
-            if (!Plugin.Instance.Config.SCP049Detection)
+            if (!config.SCP049Detection)
                 return;
 
             if (!scp049recallPosition.ContainsKey(ev.Scp049))
@@ -214,9 +191,12 @@ namespace MidnightDefense
             }
         }
 
-        public static void OnRevive(FinishingRecallEventArgs ev)
+        public void OnRevive(FinishingRecallEventArgs ev)
         {
-            if (!Plugin.Instance.Config.SCP049Detection)
+            if (!config.SCP049Detection)
+                return;
+
+            if (ev.Scp049.CheckPermission("md.049bypass"))
                 return;
 
             // Uhh, if you didn't initaite the recall then don't allow it to even happen
@@ -227,7 +207,7 @@ namespace MidnightDefense
             if (previousPosition != ev.Scp049.Position)
             {
                 PlayerInfo playerInfo = Plugin.PlayerInfo.Find(p => p.Player == ev.Scp049);
-                playerInfo.DetectionPoints += Plugin.Instance.Config.SCP049DetectedMovementPoints;
+                playerInfo.DetectionPoints += config.SCP049DetectedMovementPoints;
                 playerInfo.DetectedCheats.NoDuplicateAdd(CheatsEnum.SCP049Movement);
 
                 PlayerLog playerLog = new PlayerLog(ev.Scp049);
@@ -237,15 +217,15 @@ namespace MidnightDefense
         }
         #endregion
 
-        public static void OnLeave(LeftEventArgs ev) => Plugin.PlayerInfo.RemoveAll(p => p.Player == ev.Player);
+        public void OnLeave(LeftEventArgs ev) => Plugin.PlayerInfo.RemoveAll(p => p.Player == ev.Player);
 
-        public static void ChangeClass(ChangingRoleEventArgs ev)
+        public void ChangeClass(ChangingRoleEventArgs ev)
         {
             if (!Plugin.PlayerInfo.Any(x => x.Player == ev.Player))
             {
                 Timing.CallDelayed(3f, () =>
                 {
-                    float[] scaleArr = Plugin.Instance.Config.SilentAimbotPlayerSize;
+                    float[] scaleArr = config.SilentAimbotPlayerSize;
                     Plugin.PlayerInfo.Add(new PlayerInfo
                     {
                         Player = ev.Player,

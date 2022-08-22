@@ -48,6 +48,8 @@ namespace MidnightDefense.Commands
                 return true;
             }
 
+            Config config = Plugin.Instance.Config;
+
 
             string helpString = "Usage: mdac (player / config / monitor / info)";
             switch (arguments.At(0).ToLower())
@@ -112,26 +114,30 @@ namespace MidnightDefense.Commands
                         configSB += "[Midnight Defense]\n";
                         configSB += "Specialized in detecting and preventing Midnight Client cheaters\n";
                         configSB += "-----------FRIENDLY-FIRE-------------\n";
-                        configSB += "Friendly-Fire Detection: " + Plugin.Instance.Config.FFDetection + "\n";
-                        configSB += "Negate all Friendly-Fire Damage: " + Plugin.Instance.Config.NegateFFDamage + "\n";
-                        configSB += "Friendly-Fire Detection Points: " + Plugin.Instance.Config.FFDetectionPoints + "\n";
+                        configSB += "Friendly-Fire Detection: " + config.FFDetection + "\n";
+                        configSB += "Negate all Friendly-Fire Damage: " + config.NegateFFDamage + "\n";
+                        configSB += "Friendly-Fire Detection Points: " + config.FFDetectionPoints + "\n";
                         configSB += "-----------SCP-049 MOVEMENT-------------\n";
-                        configSB += "SCP-049 Detection: " + Plugin.Instance.Config.SCP049Detection + "\n";
-                        configSB += "SCP-049 Detection Points: " + Plugin.Instance.Config.SCP049DetectedMovementPoints + "\n";
+                        configSB += "SCP-049 Detection: " + config.SCP049Detection + "\n";
+                        configSB += "SCP-049 Detection Points: " + config.SCP049DetectedMovementPoints + "\n";
                         configSB += "-----------INFINITE RANGE-------------\n";
-                        configSB += "Infinite Range Detection: " + Plugin.Instance.Config.InfiniteRangeDetection + "\n";
-                        configSB += "Negate all Infinite Range Damage: " + Plugin.Instance.Config.NegateInfiniteRangeDamage + "\n";
-                        configSB += "Infinite Range Detection Points: " + Plugin.Instance.Config.InfiniteRangeDetectionPoints + "\n";
-                        configSB += "Maxiumum Range before Detection: " + Plugin.Instance.Config.RangeDistance + "\n";
+                        configSB += "Infinite Range Detection: " + config.InfiniteRangeDetection + "\n";
+                        configSB += "Negate all Infinite Range Damage: " + config.NegateInfiniteRangeDamage + "\n";
+                        configSB += "Infinite Range Detection Points: " + config.InfiniteRangeDetectionPoints + "\n";
+                        configSB += "Maxiumum Range before Detection: " + config.RangeDistance + "\n";
                         configSB += "-----------SPEEDHACK-------------\n";
-                        configSB += "Speedhack Detection: " + Plugin.Instance.Config.SpeedhackDetection + "\n";
-                        configSB += "Cancel Event if trigger Speedhack:" + Plugin.Instance.Config.SpeedhackDetectionCancelEvent + "\n";
-                        configSB += "Speedhack Detection Points: " + Plugin.Instance.Config.SpeedhackDetectionPoints + "\n";
-                        configSB += "Speedhack Milliseconds Threshold: " + Plugin.Instance.Config.SpeedhackDetectionThreshold + "\n";
+                        configSB += "Speedhack Detection: " + BooleanStringBuilder(config.SpeedhackDetection) + "\n";
+                        configSB += "Speedhack Maxiumum Speed: " + config.NoclipMaximumVelocity + "\n";
+                        configSB += "Speedhack Detection Points: " + config.SpeedhackDetectionPoints + "\n";
                         configSB += "-----------SILENT AIMBOT-------------\n";
-                        configSB += "Silent Aimbot Detection: " + Plugin.Instance.Config.SilentAimbotDetection + "\n";
-                        configSB += "Silent Aimbot Detection Points: " + Plugin.Instance.Config.SilentAimbotDetectionPoints + "\n";
-                        configSB += "Silent Aimbot Player: [" + string.Join(", ", Plugin.Instance.Config.SilentAimbotPlayerSize) + "]\n";
+                        configSB += "Silent Aimbot Detection: " + config.SilentAimbotDetection + "\n";
+                        configSB += "Silent Aimbot Detection Points: " + config.SilentAimbotDetectionPoints + "\n";
+                        configSB += "Silent Aimbot Player: [" + string.Join(", ", config.SilentAimbotPlayerSize) + "]\n";
+                        configSB += "-----------NO CLIP-------------\n";
+                        configSB += "NoClip Detection: " + BooleanStringBuilder(config.NoclipDetection) + "\n";
+                        configSB += "NoClip Detection Points: " + config.NoclipDetectionPoints + "\n";
+                        configSB += "NoClip Detection Rubberband: " + BooleanStringBuilder(config.NoclipRubberband) + "\n";
+                        configSB += "NoClip Detection Find Safe Position: " + BooleanStringBuilder(config.NoClipFindSafePosition) + "\n";
 
                         response = configSB;
                         return true;
@@ -142,26 +148,30 @@ namespace MidnightDefense.Commands
                         configSB += "<color=#edba42>[Midnight Defense]</color>\n";
                         configSB += "<color=#9c519c>Specialized in detecting and preventing Midnight Client cheaters</color>\n";
                         configSB += "<color=#bfbfbf>-----------FRIENDLY-FIRE-------------\n";
-                        configSB += "<color=#bfbfbf>Friendly-Fire Detection: </color>" + BooleanStringBuilder(Plugin.Instance.Config.FFDetection) + "\n";
-                        configSB += "<color=#bfbfbf>Negate all Friendly-Fire Damage: </color>" + BooleanStringBuilder(Plugin.Instance.Config.NegateFFDamage) + "\n";
-                        configSB += "<color=#bfbfbf>Friendly-Fire Detection Points: </color><color=#2ea339>" + Plugin.Instance.Config.FFDetectionPoints + "</color>\n";
+                        configSB += "<color=#bfbfbf>Friendly-Fire Detection: </color>" + BooleanStringBuilder(config.FFDetection) + "\n";
+                        configSB += "<color=#bfbfbf>Negate all Friendly-Fire Damage: </color>" + BooleanStringBuilder(config.NegateFFDamage) + "\n";
+                        configSB += "<color=#bfbfbf>Friendly-Fire Detection Points: </color><color=#2ea339>" + config.FFDetectionPoints + "</color>\n";
                         configSB += "<color=#bfbfbf>-----------SCP-049 MOVEMENT-------------\n";
-                        configSB += "<color=#bfbfbf>SCP-049 Detection: </color>" + BooleanStringBuilder(Plugin.Instance.Config.SCP049Detection) + "\n";
-                        configSB += "<color=#bfbfbf>SCP-049 Detection Points: </color><color=#2ea339>" + Plugin.Instance.Config.SCP049DetectedMovementPoints + "\n";
+                        configSB += "<color=#bfbfbf>SCP-049 Detection: </color>" + BooleanStringBuilder(config.SCP049Detection) + "\n";
+                        configSB += "<color=#bfbfbf>SCP-049 Detection Points: </color><color=#2ea339>" + config.SCP049DetectedMovementPoints + "\n";
                         configSB += "<color=#bfbfbf>-----------INFINITE RANGE-------------\n";
-                        configSB += "<color=#bfbfbf>Infinite Range Detection: </color>" + BooleanStringBuilder(Plugin.Instance.Config.InfiniteRangeDetection) + "\n";
-                        configSB += "<color=#bfbfbf>Negate all Infinite Range Damage: </color>" + BooleanStringBuilder(Plugin.Instance.Config.NegateInfiniteRangeDamage) + "\n";
-                        configSB += "<color=#bfbfbf>Infinite Range Detection Points: </color><color=#2ea339>" + Plugin.Instance.Config.InfiniteRangeDetectionPoints + "\n";
-                        configSB += "<color=#bfbfbf>Maxiumum Range before Detection: </color><color=#2ea339>" + Plugin.Instance.Config.RangeDistance + "\n";
+                        configSB += "<color=#bfbfbf>Infinite Range Detection: </color>" + BooleanStringBuilder(config.InfiniteRangeDetection) + "\n";
+                        configSB += "<color=#bfbfbf>Negate all Infinite Range Damage: </color>" + BooleanStringBuilder(config.NegateInfiniteRangeDamage) + "\n";
+                        configSB += "<color=#bfbfbf>Infinite Range Detection Points: </color><color=#2ea339>" + config.InfiniteRangeDetectionPoints + "\n";
+                        configSB += "<color=#bfbfbf>Maxiumum Range before Detection: </color><color=#2ea339>" + config.RangeDistance + "\n";
                         configSB += "<color=#bfbfbf>-----------SPEEDHACK-------------\n";
-                        configSB += "<color=#bfbfbf>Speedhack Detection: </color>" + BooleanStringBuilder(Plugin.Instance.Config.SpeedhackDetection) + "\n";
-                        configSB += "<color=#bfbfbf>Cancel Event if trigger Speedhack: </color>" + BooleanStringBuilder(Plugin.Instance.Config.SpeedhackDetectionCancelEvent) + "\n";
-                        configSB += "<color=#bfbfbf>Speedhack Detection Points: </color><color=#2ea339>" + Plugin.Instance.Config.SpeedhackDetectionPoints + "\n";
-                        configSB += "<color=#bfbfbf>Speedhack Milliseconds Threshold: </color><color=#2ea339>" + Plugin.Instance.Config.SpeedhackDetectionThreshold + "\n";
+                        configSB += "<color=#bfbfbf>Speedhack Detection: </color>" + BooleanStringBuilder(config.SpeedhackDetection) + "\n";
+                        configSB += "<color=#bfbfbf>Speedhack Maxiumum Speed: </color>" + config.NoclipMaximumVelocity + "\n";
+                        configSB += "<color=#bfbfbf>Speedhack Detection Points: </color><color=#2ea339>" + config.SpeedhackDetectionPoints + "\n";
                         configSB += "<color=#bfbfbf>-----------SILENT AIMBOT-------------\n";
-                        configSB += "<color=#bfbfbf>Silent Aimbot Detection: </color>" + BooleanStringBuilder(Plugin.Instance.Config.SilentAimbotDetection) + "\n";
-                        configSB += "<color=#bfbfbf>Silent Aimbot Detection Points: </color><color=#2ea339>" + Plugin.Instance.Config.SilentAimbotDetectionPoints + "\n";
-                        configSB += "<color=#bfbfbf>Silent Aimbot Player: </color><color=#2ea339>[" + string.Join(", ", Plugin.Instance.Config.SilentAimbotPlayerSize) + "]\n";
+                        configSB += "<color=#bfbfbf>Silent Aimbot Detection: </color>" + BooleanStringBuilder(config.SilentAimbotDetection) + "\n";
+                        configSB += "<color=#bfbfbf>Silent Aimbot Detection Points: </color><color=#2ea339>" + config.SilentAimbotDetectionPoints + "\n";
+                        configSB += "<color=#bfbfbf>Silent Aimbot Player Size: </color><color=#2ea339>[" + string.Join(", ", config.SilentAimbotPlayerSize) + "]\n";
+                        configSB += "<color=#bfbfbf>-----------NO CLIP-------------\n";
+                        configSB += "<color=#bfbfbf>NoClip Detection: </color>" + BooleanStringBuilder(config.NoclipDetection) + "\n";
+                        configSB += "<color=#bfbfbf>NoClip Detection Points: </color><color=#2ea339>" + config.NoclipDetectionPoints + "\n";
+                        configSB += "<color=#bfbfbf>NoClip Detection Rubberband: </color>" + BooleanStringBuilder(config.NoclipRubberband) + "\n";
+                        configSB += "<color=#bfbfbf>NoClip Detection Find Safe Position: </color>" + BooleanStringBuilder(config.NoClipFindSafePosition) + "\n";
 
 
                         response = configSB;
@@ -194,7 +204,7 @@ namespace MidnightDefense.Commands
                     {
                         response = "MD-AC will now monitor that player for Aimbot";
 
-                        float[] arr = Plugin.Instance.Config.SilentAimbotPlayerSize;
+                        float[] arr = config.SilentAimbotPlayerSize;
                         AntiAimbotPlayer antiAimbotPlayer = new AntiAimbotPlayer(RoleType.NtfPrivate, new Vector3(arr[0], arr[1], arr[2]), triggerPlayer);
                         antiAimbotPlayer.Spawn();
 

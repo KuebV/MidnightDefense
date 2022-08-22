@@ -16,19 +16,23 @@ namespace MidnightDefense
         public override string Author => "KuebV";
         public override string Name => "MidnightDefense";
         public override Version Version => new Version(1, 3, 0);
+        public static bool BetaBranch => true;
 
         public static Plugin Instance;
 
+        public EventHandlers EventHandler { get; private set; }
+
         public override void OnEnabled()
         {
-            Exiled.Events.Handlers.Player.Hurting += EventHandlers.OnPlayerHurt;
-            Exiled.Events.Handlers.Player.Shooting += EventHandlers.OnShooting;
-            Exiled.Events.Handlers.Scp049.StartingRecall += EventHandlers.OnRecall;
-            Exiled.Events.Handlers.Scp049.FinishingRecall += EventHandlers.OnRevive;
-            Exiled.Events.Handlers.Player.Left += EventHandlers.OnLeave;
-            Exiled.Events.Handlers.Player.Dying += EventHandlers.BeforePlayerDeath;
-            Exiled.Events.Handlers.Player.Shot += EventHandlers.OnShot;
-            Exiled.Events.Handlers.Player.ChangingRole += EventHandlers.ChangeClass;
+            EventHandler = new EventHandlers(Config);
+
+            Exiled.Events.Handlers.Player.Hurting += EventHandler.OnPlayerHurt;
+            Exiled.Events.Handlers.Scp049.StartingRecall += EventHandler.OnRecall;
+            Exiled.Events.Handlers.Scp049.FinishingRecall += EventHandler.OnRevive;
+            Exiled.Events.Handlers.Player.Left += EventHandler.OnLeave;
+            Exiled.Events.Handlers.Player.Dying += EventHandler.BeforePlayerDeath;
+            Exiled.Events.Handlers.Player.Shot += EventHandler.OnShot;
+            Exiled.Events.Handlers.Player.ChangingRole += EventHandler.ChangeClass;
 
             Instance = this;
             
@@ -48,14 +52,13 @@ namespace MidnightDefense
         public override void OnDisabled()
         {
             Instance = null;
-            Exiled.Events.Handlers.Player.Hurting -= EventHandlers.OnPlayerHurt;
-            Exiled.Events.Handlers.Player.Shooting -= EventHandlers.OnShooting;
-            Exiled.Events.Handlers.Scp049.StartingRecall -= EventHandlers.OnRecall;
-            Exiled.Events.Handlers.Scp049.FinishingRecall -= EventHandlers.OnRevive;
-            Exiled.Events.Handlers.Player.Left -= EventHandlers.OnLeave;
-            Exiled.Events.Handlers.Player.Dying -= EventHandlers.BeforePlayerDeath;
-            Exiled.Events.Handlers.Player.Shot -= EventHandlers.OnShot;
-            Exiled.Events.Handlers.Player.ChangingRole -= EventHandlers.ChangeClass;
+            Exiled.Events.Handlers.Player.Hurting -= EventHandler.OnPlayerHurt;
+            Exiled.Events.Handlers.Scp049.StartingRecall -= EventHandler.OnRecall;
+            Exiled.Events.Handlers.Scp049.FinishingRecall -= EventHandler.OnRevive;
+            Exiled.Events.Handlers.Player.Left -= EventHandler.OnLeave;
+            Exiled.Events.Handlers.Player.Dying -= EventHandler.BeforePlayerDeath;
+            Exiled.Events.Handlers.Player.Shot -= EventHandler.OnShot;
+            Exiled.Events.Handlers.Player.ChangingRole -= EventHandler.ChangeClass;
 
             base.OnDisabled();
         }
