@@ -4,6 +4,9 @@
 ## Description
 Midnight is a hacked client for SCP:SL, and so far there hasn't been much to prevent cheaters once they bypass SL-AC. Midnight Defense aims to accomplish that goal to prevent cheaters from ruining other players experiences. **Midnight Defense does not interfer with SCP:SL's base anti-cheat, rather it tackles whole different set of challenges**
 
+## Current Alerts
+- It's recommended to lower SpeedhackDetectionThreshold. Experiment with your server and find what works best
+
 ## Detections
 Midnight Defense has protection against the following cheats with more planned in the future:
 
