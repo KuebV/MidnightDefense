@@ -59,7 +59,7 @@ namespace MidnightDefense
         [Description("How often should the Anti-Aimbot NPC teleport?")]
         public float SilentAimbotTeleportTime { get; set; } = 0.15f;
 
-        [Description("How many cheater reports does it take for the Anti-Aimbot to trigger on the suspected player")]
+        [Description("How many cheater reports does it take for the Anti-Aimbot to trigger on the suspected player (-1 to disable)")]
         public int SilentAimbotTriggerReportAmount { get; set; } = 3;
 
         [Description("Speedhack Detection")]
@@ -67,12 +67,6 @@ namespace MidnightDefense
 
         [Description("Points given when suspected player triggers Speedhack")]
         public int SpeedhackDetectionPoints { get; set; } = 1;
-
-        [Description("Speedhack Millisecond Threshold (DO NOT GO OVER 80)")]
-        public int SpeedhackDetectionThreshold { get; set; } = 75;
-
-        [Description("If Speedhack is detected, should the current action be cancelled?")]
-        public bool SpeedhackDetectionCancelEvent { get; set; } = false;
 
         [Description("Noclip Detection")]
         public bool NoclipDetection { get; set; } = true;
@@ -84,16 +78,13 @@ namespace MidnightDefense
         public bool NoclipRubberband { get; set; } = true;
 
         [Description("Maximum Velocity before Noclip is detected (Don't change this to anything lower than the default!)")]
-        public float NoclipMaximumVelocity { get; set; } = 7.571895f;
+        public float NoclipMaximumVelocity { get; set; } = 7.58f;
 
         [Description("How often does the plugin check the player velocity for noclip?")]
         public float NoClipDetectionSpeed { get; set; } = 0.5f;
 
-        [Description("Should NoClip Detection activate even on staff?")]
-        public bool NoClipDetectionStaff { get; set; } = false;
-
         [Description("What roles should be allowed to use NoClip even if they aren't staff")]
-        public RoleType[] NoClipAllowedRoles { get; set; } = new RoleType[] { RoleType.Tutorial };  
+        public RoleType[] NoClipAllowedRoles { get; set; } = new RoleType[] { RoleType.Tutorial };
 
         [Description("Alert Threshold (Points until any online staff are notified)")]
         public int PointThreshold { get; set; } = 5;
