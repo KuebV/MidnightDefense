@@ -45,5 +45,6 @@ namespace MidnightDefense
         }
 
         public float MaxiumumSpeed { get; set; } = 0;
+        public int Chances { get; set; } = 0;
     }
 }

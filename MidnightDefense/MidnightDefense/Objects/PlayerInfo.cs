@@ -51,5 +51,16 @@ namespace MidnightDefense.Objects
         /// Get the amount of times that staff / discord have been alerted of the player
         /// </summary>
         public int AlertCount { get; set; }
+
+
+        /// <summary>
+        /// How many times has the player been reported as cheating?
+        /// </summary>
+        public int ReportCount { get; set; }
+
+        /// <summary>
+        /// Get the players who have reported the targetted player
+        /// </summary>
+        public List<Player> ReporterPlayers { get; set; } = new List<Player>();
     }
 }

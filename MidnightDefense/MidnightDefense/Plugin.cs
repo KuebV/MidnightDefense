@@ -15,8 +15,7 @@ namespace MidnightDefense
 
         public override string Author => "KuebV";
         public override string Name => "MidnightDefense";
-        public override Version Version => new Version(1, 3, 0);
-        public static bool BetaBranch => true;
+        public override Version Version => new Version(1, 3, 1);
 
         public static Plugin Instance;
 
@@ -33,6 +32,7 @@ namespace MidnightDefense
             Exiled.Events.Handlers.Player.Dying += EventHandler.BeforePlayerDeath;
             Exiled.Events.Handlers.Player.Shot += EventHandler.OnShot;
             Exiled.Events.Handlers.Player.ChangingRole += EventHandler.ChangeClass;
+            Exiled.Events.Handlers.Server.ReportingCheater += EventHandler.OnCheaterReport;
 
             Instance = this;
             
@@ -59,6 +59,7 @@ namespace MidnightDefense
             Exiled.Events.Handlers.Player.Dying -= EventHandler.BeforePlayerDeath;
             Exiled.Events.Handlers.Player.Shot -= EventHandler.OnShot;
             Exiled.Events.Handlers.Player.ChangingRole -= EventHandler.ChangeClass;
+            Exiled.Events.Handlers.Server.ReportingCheater -= EventHandler.OnCheaterReport;
 
             base.OnDisabled();
         }

@@ -137,7 +137,6 @@ namespace MidnightDefense.Commands
                         configSB += "NoClip Detection: " + BooleanStringBuilder(config.NoclipDetection) + "\n";
                         configSB += "NoClip Detection Points: " + config.NoclipDetectionPoints + "\n";
                         configSB += "NoClip Detection Rubberband: " + BooleanStringBuilder(config.NoclipRubberband) + "\n";
-                        configSB += "NoClip Detection Find Safe Position: " + BooleanStringBuilder(config.NoClipFindSafePosition) + "\n";
 
                         response = configSB;
                         return true;
@@ -171,8 +170,6 @@ namespace MidnightDefense.Commands
                         configSB += "<color=#bfbfbf>NoClip Detection: </color>" + BooleanStringBuilder(config.NoclipDetection) + "\n";
                         configSB += "<color=#bfbfbf>NoClip Detection Points: </color><color=#2ea339>" + config.NoclipDetectionPoints + "\n";
                         configSB += "<color=#bfbfbf>NoClip Detection Rubberband: </color>" + BooleanStringBuilder(config.NoclipRubberband) + "\n";
-                        configSB += "<color=#bfbfbf>NoClip Detection Find Safe Position: </color>" + BooleanStringBuilder(config.NoClipFindSafePosition) + "\n";
-
 
                         response = configSB;
                         return true;
@@ -216,8 +213,20 @@ namespace MidnightDefense.Commands
                 #region ANTI-CHEAT DISMISSAL
                 case "dismiss":
                     Player dismissPlayer = Player.Get(arguments.At(1));
-                    Plugin.PlayerInfo.Find(p => p.Player == dismissPlayer).DetectionPoints = 0;
 
+                    PlayerInfo playerDismissalInfo = Plugin.PlayerInfo.Find(p => p.Player == dismissPlayer);
+                    playerDismissalInfo.DetectionPoints = 0;
+                    playerDismissalInfo.DetectedCheats.Clear();
+                    playerDismissalInfo.MonitorForAimbot = false;
+                    playerDismissalInfo.ReporterPlayers.Clear();
+                    playerDismissalInfo.ReportCount = 0;
+
+                    if (API.MonitoringAimbot.ContainsKey(dismissPlayer))
+                    {
+                        API.MonitoringAimbot[dismissPlayer].Destroy();
+                        API.MonitoringAimbot.Remove(dismissPlayer);
+                    }
+ 
                     PlayerLog dismissalLog = new PlayerLog(dismissPlayer);
                     dismissalLog.Log(LogType.Informational, "Player has been dismissed by " + Player.Get(sender).Nickname);
 

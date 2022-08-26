@@ -250,13 +250,54 @@ namespace MidnightDefense
                 return;
             }
 
-            Timing.CallDelayed(3f, () =>
+            if (Plugin.PlayerInfo.Any(x => x.Player == ev.Player))
             {
-                Plugin.PlayerInfo.Find(x => x.Player == ev.Player).Position.LastPosition = ev.Player.Position;
-            });
+                Timing.CallDelayed(3f, () =>
+                {
+                    Plugin.PlayerInfo.Find(x => x.Player == ev.Player).Position.LastPosition = ev.Player.Position;
+                });
+            }
 
 
         }
+
+        public void OnCheaterReport(ReportingCheaterEventArgs ev)
+        {
+            if (config.SilentAimbotTriggerReportAmount == -1)
+                return;
+
+            PlayerInfo playerInfo = Plugin.PlayerInfo.Find(x => x.Player == ev.Target);
+            if (playerInfo == null)
+            {
+                Log.Error("OnCheaterReport: Targetted Player is null!");
+                return;
+            }
+
+            // Players who have already reported the player shouldn't be able to spam report them and trigger the aimbot
+            if (playerInfo.ReporterPlayers.Contains(ev.Issuer))
+                return;
+
+            // If the player is already being monitored for aimbot
+            if (API.MonitoringAimbot.ContainsKey(ev.Target))
+                return;
+
+            playerInfo.ReportCount++;
+            playerInfo.ReporterPlayers.Add(ev.Issuer);
+
+            if (playerInfo.ReportCount >= config.SilentAimbotTriggerReportAmount)
+            {
+
+                float[] arr = config.SilentAimbotPlayerSize;
+                AntiAimbotPlayer antiAimbotPlayer = new AntiAimbotPlayer(RoleType.NtfPrivate, new Vector3(arr[0], arr[1], arr[2]), ev.Target);
+                antiAimbotPlayer.Spawn();
+
+                API.MonitoringAimbot.Add(ev.Target, antiAimbotPlayer);
+                playerInfo.MonitorForAimbot = true;
+            }
+
+            
+        }
+
 
         public static void AlertOnlineStaff(Player suspectedPlayer)
         {
@@ -284,21 +325,25 @@ namespace MidnightDefense
 
                 for (int i = 0; i < suspectedPlayers.Count; i++)
                 {
-                    if (suspectedPlayers[i].AlertCount <= Plugin.Instance.Config.AlertMaxTimes)
+                    try
                     {
-                        if (Plugin.Instance.Config.AlertOnlineStaff)
-                            AlertOnlineStaff(suspectedPlayers[i].Player);
-
-                        if (Plugin.Instance.Config.DiscordWebhookEnabled)
+                        if (suspectedPlayers[i].AlertCount <= Plugin.Instance.Config.AlertMaxTimes)
                         {
-                            _ = Webhook.SendWebhook(new Webhook
+                            if (Plugin.Instance.Config.AlertOnlineStaff)
+                                AlertOnlineStaff(suspectedPlayers[i].Player);
+
+                            if (Plugin.Instance.Config.DiscordWebhookEnabled)
                             {
-                                detectedPlayer = suspectedPlayers[i].Player,
-                                Message = Plugin.Instance.Translation.DiscordAlertMessage,
-                                detectedCheats = suspectedPlayers[i].DetectedCheats.ToArray()
-                            });
+                                _ = Webhook.SendWebhook(new Webhook
+                                {
+                                    detectedPlayer = suspectedPlayers[i].Player,
+                                    Message = Plugin.Instance.Translation.DiscordAlertMessage,
+                                    detectedCheats = suspectedPlayers[i].DetectedCheats.ToArray()
+                                });
+                            }
                         }
                     }
+                    catch (Exception ex) { Log.Error(ex); }
 
                     suspectedPlayers[i].AlertCount++;
                 }

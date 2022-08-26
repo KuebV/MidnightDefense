@@ -59,7 +59,7 @@ namespace MidnightDefense
         [Description("How often should the Anti-Aimbot NPC teleport?")]
         public float SilentAimbotTeleportTime { get; set; } = 0.15f;
 
-        [Description("How many cheater reports does it take for the Anti-Aimbot to trigger on the suspected player")]
+        [Description("How many cheater reports does it take for the Anti-Aimbot to trigger on the suspected player (-1 to disable)")]
         public int SilentAimbotTriggerReportAmount { get; set; } = 3;
 
         [Description("Speedhack Detection")]
@@ -85,9 +85,6 @@ namespace MidnightDefense
 
         [Description("What roles should be allowed to use NoClip even if they aren't staff")]
         public RoleType[] NoClipAllowedRoles { get; set; } = new RoleType[] { RoleType.Tutorial };
-
-        [Description("If there isn't anything below the player, should it teleport them to a safe position?")]
-        public bool NoClipFindSafePosition { get; set; } = true;
 
         [Description("Alert Threshold (Points until any online staff are notified)")]
         public int PointThreshold { get; set; } = 5;
