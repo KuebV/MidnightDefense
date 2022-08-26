@@ -221,42 +221,48 @@ namespace MidnightDefense
 
         public void ChangeClass(ChangingRoleEventArgs ev)
         {
-            if (!Plugin.PlayerInfo.Any(x => x.Player == ev.Player))
+            try
             {
-                Timing.CallDelayed(3f, () =>
+                if (!Plugin.PlayerInfo.Any(x => x.Player == ev.Player))
                 {
-                    float[] scaleArr = config.SilentAimbotPlayerSize;
-                    Plugin.PlayerInfo.Add(new PlayerInfo
+                    Timing.CallDelayed(3f, () =>
                     {
-                        Player = ev.Player,
-                        Position = new PlayerPositionData(ev.Player),
-                        MonitorForAimbot = false,
-                        SilentAimbotHitCounter = 0,
-                        LastBulletFired = 0,
-                        DetectedCheats = new List<CheatsEnum> { },
-                        DetectionPoints = 0,
+                        float[] scaleArr = config.SilentAimbotPlayerSize;
+                        Plugin.PlayerInfo.Add(new PlayerInfo
+                        {
+                            Player = ev.Player,
+                            Position = new PlayerPositionData(ev.Player),
+                            MonitorForAimbot = false,
+                            SilentAimbotHitCounter = 0,
+                            LastBulletFired = 0,
+                            DetectedCheats = new List<CheatsEnum> { },
+                            DetectionPoints = 0,
+                        });
+
+                        PlayerLog playerLog = new PlayerLog(ev.Player);
+                        playerLog.Log(LogType.Informational, "<color=#6ff263>--START OF LOG--</color>");
+
+                        Log.Info(ev.Player.Nickname + " has been initalized!");
                     });
+                }
 
-                    PlayerLog playerLog = new PlayerLog(ev.Player);
-                    playerLog.Log(LogType.Informational, "<color=#6ff263>--START OF LOG--</color>");
-
-                    Log.Info(ev.Player.Nickname + " has been initalized!");
-                });
-            }
-
-            if (ev.NewRole == RoleType.Spectator || ev.NewRole == RoleType.Tutorial)
-            {
-                Plugin.PlayerInfo.Find(x => x.Player == ev.Player).Position.LastPosition = new Vector3(0f, 0f, 0f);
-                return;
-            }
-
-            if (Plugin.PlayerInfo.Any(x => x.Player == ev.Player))
-            {
-                Timing.CallDelayed(3f, () =>
+                if (ev.NewRole == RoleType.Spectator || ev.NewRole == RoleType.Tutorial)
                 {
-                    Plugin.PlayerInfo.Find(x => x.Player == ev.Player).Position.LastPosition = ev.Player.Position;
-                });
+                    Plugin.PlayerInfo.Find(x => x.Player == ev.Player).Position.LastPosition = new Vector3(0f, 0f, 0f);
+                    return;
+                }
+
+                if (Plugin.PlayerInfo.Any(x => x.Player == ev.Player))
+                {
+                    Timing.CallDelayed(3f, () =>
+                    {
+                        Plugin.PlayerInfo.Find(x => x.Player == ev.Player).Position.LastPosition = ev.Player.Position;
+                    });
+                }
             }
+
+            // Player just left, but plugin freaks out
+            catch (NullReferenceException ex) { return; }
 
 
         }
