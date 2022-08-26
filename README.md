@@ -1,10 +1,3 @@
-# MIDNIGHT HAS BEEN SHUTDOWN. PROJECT WILL BE ARCHIVED
-![image](Images/shutdown.png)
-
-## Midnight Defense will receive one final update, being 1.3.1, Estimated Release Date: 8/26/22
-### Thank you everyone for your bug reports and feedback
-
-
 # Midnight Defense
 ### Specialized in detecting and preventing Midnight Client Cheaters
 
